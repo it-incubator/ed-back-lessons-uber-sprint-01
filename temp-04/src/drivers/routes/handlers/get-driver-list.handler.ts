@@ -1,15 +1,52 @@
 import { Request, Response } from 'express';
-import { driversRepository } from '../../repositories/drivers.repository';
 import { mapToDriverViewModel } from '../mappers/map-to-driver-view-model.util';
 import { HttpStatus } from '../../../core/types/http-statuses';
+import { driversService } from '../../application/drivers.service';
 
-export async function getDriverListHandler(req: Request, res: Response) {
+export enum SortDirection {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+type PaginationAndSorting = {
+  pageNumber: number;
+  pageSize: number;
+  sortBy: string;
+  sortDirection: SortDirection;
+};
+
+export type DriverQueryDto = PaginationAndSorting & {
+  searchDriverNameTerm?: string;
+  searchDriverEmailTerm?: string;
+  searchVehicleMakeTerm?: string;
+};
+
+export enum DriverSortField {
+  CreatedAt = 'createdAt',
+  Name = 'name',
+  Email = 'email',
+}
+
+export async function getDriverListHandler(
+  req: Request<{}, {}, {}, DriverQueryDto>,
+  res: Response,
+) {
   try {
-    const drivers = await driversRepository.findAll();
+    const queryDto = req.query;
 
-    const driverViewModels = drivers.map(mapToDriverViewModel);
+    const { items, totalCount } = await driversService.findAll(queryDto);
 
-    res.send(driverViewModels);
+    const driverViewModels = items.map(mapToDriverViewModel);
+
+    const result = {
+      page: queryDto.pageNumber,
+      pageSize: queryDto.pageSize,
+      pageCount: Math.ceil(totalCount / queryDto.pageSize),
+      totalCount,
+      items: driverViewModels,
+    };
+
+    res.send(result);
   } catch (e: unknown) {
     res.sendStatus(HttpStatus.InternalServerError);
   }

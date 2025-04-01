@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { DriverInputDto } from '../../dto/driver.input-dto';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { driversRepository } from '../../repositories/drivers.repository';
 import { createErrorMessages } from '../../../core/middlewares/validation/input-validtion-result.middleware';
+import { driversService } from '../../application/drivers.service';
 
 export async function updateDriverHandler(
   req: Request<{ id: string }, {}, DriverInputDto>,
@@ -11,9 +11,9 @@ export async function updateDriverHandler(
   try {
     const id = req.params.id;
 
-    const driver = driversRepository.findById(id);
+    const isUpdated = await driversService.update(id, req.body);
 
-    if (!driver) {
+    if (!isUpdated) {
       res
         .status(HttpStatus.NotFound)
         .send(
@@ -22,8 +22,6 @@ export async function updateDriverHandler(
 
       return;
     }
-
-    await driversRepository.update(id, req.body);
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (e: unknown) {

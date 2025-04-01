@@ -3,11 +3,15 @@ import { inputValidationResultMiddleware } from '../../core/middlewares/validati
 import { driverInputDtoValidation } from './driver.input-dto.validation-middlewares';
 import { superAdminGuardMiddleware } from '../../auth/middlewares/super-admin.guard-middleware';
 import { idValidation } from '../../core/middlewares/validation/params-id.validation-middleware';
-import { getDriverListHandler } from './handlers/get-driver-list.handler';
+import {
+  DriverSortField,
+  getDriverListHandler,
+} from './handlers/get-driver-list.handler';
 import { getDriverHandler } from './handlers/get-driver.handler';
 import { createDriverHandler } from './handlers/create-driver.handler';
 import { updateDriverHandler } from './handlers/update-driver.handler';
 import { deleteDriverHandler } from './handlers/delete-driver.handler';
+import { paginationAndSortingValidation } from '../../core/middlewares/validation/query-pagination-sorting.validation-middleware';
 
 export const driversRouter = Router({});
 
@@ -15,7 +19,11 @@ export const driversRouter = Router({});
 driversRouter.use(superAdminGuardMiddleware);
 
 driversRouter
-  .get('', getDriverListHandler)
+  .get(
+    '',
+    paginationAndSortingValidation(DriverSortField),
+    getDriverListHandler,
+  )
 
   .get('/:id', idValidation, inputValidationResultMiddleware, getDriverHandler)
 
