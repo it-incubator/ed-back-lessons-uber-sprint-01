@@ -6,7 +6,7 @@ import express from 'express';
 import { VehicleFeature } from '../../../src/drivers/types/driver';
 import { setupApp } from '../../../src/setup-app';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
-import { DriverInputDto } from '../../../src/drivers/dto/driver.input-dto';
+import { DriverInput } from '../../../src/drivers/input/driver.input';
 import { generateBasicAuthToken } from '../../utils/generate-admin-auth-token';
 import { DRIVERS_PATH } from '../../../src/core/paths/paths';
 import { createDriver } from '../../utils/drivers/create-driver';
@@ -32,7 +32,7 @@ describe('Driver API', () => {
   });
 
   it('✅ should create driver; POST /api/drivers', async () => {
-    const newDriver: DriverInputDto = {
+    const newDriver: DriverInput = {
       ...getDriverDto(),
       name: 'Feodor',
       email: 'feodor@example.com',
@@ -69,7 +69,7 @@ describe('Driver API', () => {
   it('✅ should update driver; PUT /api/drivers/:id', async () => {
     const createdDriver = await createDriver(app);
 
-    const driverUpdateData: DriverInputDto = {
+    const driverUpdateData: DriverInput = {
       name: 'Updated Name',
       phoneNumber: '999-888-7777',
       email: 'updated@example.com',

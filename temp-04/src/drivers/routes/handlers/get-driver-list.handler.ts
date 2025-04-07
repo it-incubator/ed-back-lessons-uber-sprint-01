@@ -1,25 +1,28 @@
 import { Request, Response } from 'express';
-import { mapToDriverViewModel } from '../mappers/map-to-driver-view-model.util';
-import { HttpStatus } from '../../../core/types/http-statuses';
+import { mapToDriverOutput } from '../mappers/map-to-driver-output.util';
 import { driversService } from '../../application/drivers.service';
+import { errorsHandler } from '../../../core/errors/errors.handler';
+import { formatJsonApiResponse } from '../../../core/mappers/response.mapper';
+import { DriverOutput } from '../../types/driver-output';
 
 export enum SortDirection {
   Asc = 'asc',
   Desc = 'desc',
 }
 
-type PaginationAndSorting = {
+type PaginationAndSorting<S> = {
   pageNumber: number;
   pageSize: number;
-  sortBy: string;
+  sortBy: S;
   sortDirection: SortDirection;
 };
 
-export type DriverQueryDto = PaginationAndSorting & {
-  searchDriverNameTerm?: string;
-  searchDriverEmailTerm?: string;
-  searchVehicleMakeTerm?: string;
-};
+export type DriverQueryInput = PaginationAndSorting<DriverSortField> &
+  Partial<{
+    searchDriverNameTerm: string;
+    searchDriverEmailTerm: string;
+    searchVehicleMakeTerm: string;
+  }>;
 
 export enum DriverSortField {
   CreatedAt = 'createdAt',
@@ -27,27 +30,39 @@ export enum DriverSortField {
   Email = 'email',
 }
 
+export type ListPaginatedOutput<I> = {
+  page: number;
+  pageSize: number;
+  pageCount: number;
+  totalCount: number;
+  items: I;
+};
+
 export async function getDriverListHandler(
-  req: Request<{}, {}, {}, DriverQueryDto>,
+  req: Request<{}, {}, {}, DriverQueryInput>,
   res: Response,
 ) {
   try {
-    const queryDto = req.query;
+    const queryInput = req.query;
 
-    const { items, totalCount } = await driversService.findAll(queryDto);
+    const { items, totalCount } = await driversService.findAll(queryInput);
 
-    const driverViewModels = items.map(mapToDriverViewModel);
+    // const driverListOutput = items.map(mapToDriverOutput);
 
-    const result = {
-      page: queryDto.pageNumber,
-      pageSize: queryDto.pageSize,
-      pageCount: Math.ceil(totalCount / queryDto.pageSize),
-      totalCount,
-      items: driverViewModels,
-    };
+    const result = formatJsonApiResponse<DriverOutput>({
+      entities: items,
+      entityType: 'drivers',
+      meta: {
+        page: queryInput.pageNumber,
+        pageSize: queryInput.pageSize,
+        pageCount: Math.ceil(totalCount / queryInput.pageSize),
+        totalCount,
+      },
+      attributeMapper: mapToDriverOutput,
+    });
 
     res.send(result);
   } catch (e: unknown) {
-    res.sendStatus(HttpStatus.InternalServerError);
+    errorsHandler(e, res);
   }
 }

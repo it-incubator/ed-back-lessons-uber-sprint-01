@@ -1,8 +1,9 @@
 import { Driver } from '../types/driver';
-import { DriverInputDto } from '../dto/driver.input-dto';
+import { DriverInput } from '../input/driver.input';
 import { driverCollection } from '../../db/mongo.db';
 import { ObjectId, WithId } from 'mongodb';
 import { DriverQueryDto } from '../routes/handlers/get-driver-list.handler';
+import { RepositoryNotFoundError } from '../../core/errors/repository-not-found.error';
 
 export const driversRepository = {
   async findAll(
@@ -45,13 +46,22 @@ export const driversRepository = {
     return driverCollection.findOne({ _id: new ObjectId(id) });
   },
 
+  async findByIdOrFail(id: string): Promise<WithId<Driver>> {
+    const res = await driverCollection.findOne({ _id: new ObjectId(id) });
+
+    if (!res) {
+      throw new RepositoryNotFoundError('Driver not exist');
+    }
+    return res;
+  },
+
   async create(newDriver: Driver): Promise<string> {
     const insertResult = await driverCollection.insertOne(newDriver);
 
     return insertResult.insertedId.toString();
   },
 
-  async update(id: string, dto: DriverInputDto): Promise<void> {
+  async update(id: string, dto: DriverInput): Promise<void> {
     const updateResult = await driverCollection.updateOne(
       {
         _id: new ObjectId(id),
@@ -74,7 +84,7 @@ export const driversRepository = {
     );
 
     if (updateResult.matchedCount < 1) {
-      throw new Error('Driver not exist');
+      throw new RepositoryNotFoundError('Driver not exist');
     }
 
     return;
@@ -86,7 +96,7 @@ export const driversRepository = {
     });
 
     if (deleteResult.deletedCount < 1) {
-      throw new Error('Driver not exist');
+      throw new RepositoryNotFoundError('Driver not exist');
     }
 
     return;

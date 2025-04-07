@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { DriverInputDto } from '../../dto/driver.input-dto';
+import { DriverInput } from '../../input/driver.input';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { createErrorMessages } from '../../../core/middlewares/validation/input-validtion-result.middleware';
 import { driversService } from '../../application/drivers.service';
 
 export async function updateDriverHandler(
-  req: Request<{ id: string }, {}, DriverInputDto>,
+  req: Request<{ id: string }, {}, DriverInput>,
   res: Response,
 ) {
   try {

@@ -1,6 +1,6 @@
 import { VehicleFeature } from './driver';
 
-export type DriverViewModel = {
+export type DriverOutput = {
   id: string;
   name: string;
   phoneNumber: string;

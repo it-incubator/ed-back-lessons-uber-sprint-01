@@ -6,20 +6,27 @@ import {
 import { NextFunction, Request, Response } from 'express';
 import { ValidationErrorType } from '../../types/validationError';
 import { HttpStatus } from '../../types/http-statuses';
-import { ValidationErrorDto } from '../../types/validationError.dto';
+import { ValidationErrorListOutput } from '../../types/validationError.dto';
 
 export const createErrorMessages = (
   errors: ValidationErrorType[],
-): ValidationErrorDto => {
-  return { errorMessages: errors };
+): ValidationErrorListOutput => {
+  return {
+    errors: errors.map((error) => ({
+      status: error.status,
+      detail: error.detail,
+      source: error.source ? { pointer: error.source } : { pointer: '' },
+    })),
+  };
 };
 
 const formatErrors = (error: ValidationError): ValidationErrorType => {
   const expressError = error as unknown as FieldValidationError;
 
   return {
-    field: expressError.path,
-    message: expressError.msg,
+    status: HttpStatus.BadRequest,
+    source: expressError.path,
+    detail: expressError.msg,
   };
 };
 
@@ -36,6 +43,6 @@ export const inputValidationResultMiddleware = (
     next();
     return;
   }
-  res.status(HttpStatus.BadRequest).json({ errorMessages: errors });
+  res.status(HttpStatus.BadRequest).json(createErrorMessages(errors));
   return;
 };

@@ -1,22 +1,23 @@
 import { Request, Response } from 'express';
-import { DriverInputDto } from '../../dto/driver.input-dto';
+import { DriverInput } from '../../input/driver.input';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { mapToDriverViewModel } from '../mappers/map-to-driver-view-model.util';
+import { mapToDriverOutput } from '../mappers/map-to-driver-output.util';
 import { driversService } from '../../application/drivers.service';
+import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function createDriverHandler(
-  req: Request<{}, {}, DriverInputDto>,
+  req: Request<{}, {}, DriverInput>,
   res: Response,
 ) {
   try {
     const createdDriverId = await driversService.create(req.body);
 
-    const createdDriver = await driversService.findById(createdDriverId);
+    const createdDriver = await driversService.findByIdOrFail(createdDriverId);
 
-    const driverViewModel = mapToDriverViewModel(createdDriver!);
+    const driverOutput = mapToDriverOutput(createdDriver!);
 
-    res.status(HttpStatus.Created).send(driverViewModel);
+    res.status(HttpStatus.Created).send(driverOutput);
   } catch (e: unknown) {
-    res.sendStatus(HttpStatus.InternalServerError);
+    errorsHandler(e, res);
   }
 }

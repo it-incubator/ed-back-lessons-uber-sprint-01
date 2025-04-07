@@ -1,21 +1,23 @@
 import { driversRepository } from '../repositories/drivers.repository';
 import { WithId } from 'mongodb';
 import { Driver } from '../types/driver';
-import { DriverInputDto } from '../dto/driver.input-dto';
-import { DriverQueryDto } from '../routes/handlers/get-driver-list.handler';
+import { DriverInput } from '../input/driver.input';
+import { DriverQueryInput } from '../routes/handlers/get-driver-list.handler';
+import { ridesRepository } from '../../rides/repositories/rides.repository';
+import { DomainError, DomainErrorCode } from '../../core/errors/domain.error';
 
 export const driversService = {
   async findAll(
-    queryDto: DriverQueryDto,
+    queryDto: DriverQueryInput,
   ): Promise<{ items: WithId<Driver>[]; totalCount: number }> {
     return driversRepository.findAll(queryDto);
   },
 
-  async findById(id: string): Promise<WithId<Driver> | null> {
-    return driversRepository.findById(id);
+  async findByIdOrFail(id: string): Promise<WithId<Driver>> {
+    return driversRepository.findByIdOrFail(id);
   },
 
-  async create(dto: DriverInputDto): Promise<string> {
+  async create(dto: DriverInput): Promise<string> {
     const newDriver: Driver = {
       name: dto.name,
       phoneNumber: dto.phoneNumber,
@@ -34,16 +36,22 @@ export const driversService = {
     return driversRepository.create(newDriver);
   },
 
-  async update(id: string, dto: DriverInputDto): Promise<boolean> {
-    const driver = driversRepository.findById(id);
-
-    if (!driver) {
-      return false;
-    }
-
+  async update(id: string, dto: DriverInput): Promise<void> {
     await driversRepository.update(id, dto);
-    return true;
+    return;
   },
 
-  async delete(id: number) {},
+  async delete(id: string): Promise<void> {
+    const activeRide = await ridesRepository.findActiveRideByDriverId(id);
+
+    if (activeRide) {
+      throw new DomainError(
+        'The driver is currently on a job',
+        DomainErrorCode.BadRequest,
+      );
+    }
+
+    await driversRepository.delete(id);
+    return;
+  },
 };

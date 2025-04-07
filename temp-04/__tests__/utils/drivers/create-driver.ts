@@ -1,18 +1,18 @@
 // @ts-ignore
 import request from 'supertest';
-import { DriverInputDto } from '../../../src/drivers/dto/driver.input-dto';
+import { DriverInput } from '../../../src/drivers/input/driver.input';
 import { Express } from 'express';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { generateBasicAuthToken } from '../generate-admin-auth-token';
 import { DRIVERS_PATH } from '../../../src/core/paths/paths';
 import { getDriverDto } from './get-driver-dto';
-import { DriverViewModel } from '../../../src/drivers/types/driver-view-model';
+import { DriverOutput } from '../../../src/drivers/types/driver-output';
 
 export async function createDriver(
   app: Express,
-  driverDto?: DriverInputDto,
-): Promise<DriverViewModel> {
-  const defaultDriverData: DriverInputDto = getDriverDto();
+  driverDto?: DriverInput,
+): Promise<DriverOutput> {
+  const defaultDriverData: DriverInput = getDriverDto();
 
   const testDriverData = { ...defaultDriverData, ...driverDto };
 

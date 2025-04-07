@@ -5,7 +5,7 @@ import express from 'express';
 import { VehicleFeature } from '../../../src/drivers/types/driver';
 import { setupApp } from '../../../src/setup-app';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
-import { DriverInputDto } from '../../../src/drivers/dto/driver.input-dto';
+import { DriverInput } from '../../../src/drivers/input/driver.input';
 import { generateBasicAuthToken } from '../../utils/generate-admin-auth-token';
 import { getDriverDto } from '../../utils/drivers/get-driver-dto';
 import { clearDb } from '../../utils/clear-db';
@@ -18,7 +18,7 @@ describe('Driver API body validation check', () => {
   const app = express();
   setupApp(app);
 
-  const correctTestDriverData: DriverInputDto = getDriverDto();
+  const correctTestDriverData: DriverInput = getDriverDto();
 
   const adminToken = generateBasicAuthToken();
 

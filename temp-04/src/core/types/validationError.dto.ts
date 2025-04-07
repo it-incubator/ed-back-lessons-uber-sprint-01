@@ -1,3 +1,9 @@
-import { ValidationErrorType } from './validationError';
+import { HttpStatus } from './http-statuses';
 
-export type ValidationErrorDto = { errorMessages: ValidationErrorType[] };
+type ValidationErrorOutput = {
+  status: HttpStatus;
+  detail: string;
+  source: { pointer: string };
+};
+
+export type ValidationErrorListOutput = { errors: ValidationErrorOutput[] };

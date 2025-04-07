@@ -1,8 +1,8 @@
 import { WithId } from 'mongodb';
 import { Driver } from '../../types/driver';
-import { DriverViewModel } from '../../types/driver-view-model';
+import { DriverOutput } from '../../types/driver-output';
 
-export function mapToDriverViewModel(driver: WithId<Driver>): DriverViewModel {
+export function mapToDriverOutput(driver: WithId<Driver>): DriverOutput {
   return {
     id: driver._id.toString(),
     name: driver.name,

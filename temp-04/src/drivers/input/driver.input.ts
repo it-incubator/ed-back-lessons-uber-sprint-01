@@ -1,6 +1,6 @@
 import { VehicleFeature } from '../types/driver';
 
-export type DriverInputDto = {
+export type DriverInput = {
   name: string;
   phoneNumber: string;
   email: string;

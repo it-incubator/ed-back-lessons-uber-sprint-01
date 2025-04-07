@@ -1,4 +1,7 @@
+import { HttpStatus } from './http-statuses';
+
 export type ValidationErrorType = {
-  field: string;
-  message: string;
+  status: HttpStatus;
+  source?: string;
+  detail: string;
 };
