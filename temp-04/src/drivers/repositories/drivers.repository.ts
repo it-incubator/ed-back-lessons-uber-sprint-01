@@ -1,13 +1,13 @@
 import { Driver } from '../types/driver';
-import { DriverInput } from '../input/driver.input';
 import { driverCollection } from '../../db/mongo.db';
 import { ObjectId, WithId } from 'mongodb';
-import { DriverQueryDto } from '../routes/handlers/get-driver-list.handler';
+import { DriverQueryInput } from '../routes/handlers/get-driver-list.handler';
 import { RepositoryNotFoundError } from '../../core/errors/repository-not-found.error';
+import { DriverAttributesInput } from '../input/driver-attributes.input';
 
 export const driversRepository = {
   async findAll(
-    queryDto: DriverQueryDto,
+    queryDto: DriverQueryInput,
   ): Promise<{ items: WithId<Driver>[]; totalCount: number }> {
     const {
       pageNumber,
@@ -61,7 +61,7 @@ export const driversRepository = {
     return insertResult.insertedId.toString();
   },
 
-  async update(id: string, dto: DriverInput): Promise<void> {
+  async update(id: string, dto: DriverAttributesInput): Promise<void> {
     const updateResult = await driverCollection.updateOne(
       {
         _id: new ObjectId(id),

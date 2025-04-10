@@ -14,8 +14,9 @@ export const createErrorMessages = (
   return {
     errors: errors.map((error) => ({
       status: error.status,
-      detail: error.detail,
-      source: error.source ? { pointer: error.source } : { pointer: '' },
+      detail: error.detail, //error message
+      source: { pointer: error.source ?? '' }, //error field
+      ...(error.code ? { code: error.code } : {}), //domain error code
     })),
   };
 };

@@ -1,16 +1,18 @@
 import { Request, Response } from 'express';
-import { DriverInput } from '../../input/driver.input';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { mapToDriverOutput } from '../mappers/map-to-driver-output.util';
 import { driversService } from '../../application/drivers.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
+import { DriverCreateInput } from '../../input/driver-create.input';
 
 export async function createDriverHandler(
-  req: Request<{}, {}, DriverInput>,
+  req: Request<{}, {}, DriverCreateInput>,
   res: Response,
 ) {
   try {
-    const createdDriverId = await driversService.create(req.body);
+    const createdDriverId = await driversService.create(
+      req.body.data.attributes,
+    );
 
     const createdDriver = await driversService.findByIdOrFail(createdDriverId);
 

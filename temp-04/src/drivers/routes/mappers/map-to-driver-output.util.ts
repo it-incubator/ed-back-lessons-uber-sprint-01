@@ -1,14 +1,20 @@
 import { WithId } from 'mongodb';
 import { Driver } from '../../types/driver';
-import { DriverOutput } from '../../types/driver-output';
+import { DriverOutput } from '../../types/driver.output';
+import { ResourceType } from '../../../core/types/resource-type';
 
 export function mapToDriverOutput(driver: WithId<Driver>): DriverOutput {
   return {
-    id: driver._id.toString(),
-    name: driver.name,
-    phoneNumber: driver.phoneNumber,
-    email: driver.email,
-    vehicle: driver.vehicle,
-    createdAt: driver.createdAt,
+    data: {
+      type: ResourceType.Drivers,
+      id: driver._id.toString(),
+      attributes: {
+        name: driver.name,
+        phoneNumber: driver.phoneNumber,
+        email: driver.email,
+        vehicle: driver.vehicle,
+        createdAt: driver.createdAt,
+      },
+    },
   };
 }

@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
-import { mapToDriverOutput } from '../mappers/map-to-driver-output.util';
 import { driversService } from '../../application/drivers.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import { formatJsonApiResponse } from '../../../core/mappers/response.mapper';
-import { DriverOutput } from '../../types/driver-output';
+import { mapToDriverListPaginatedOutput } from '../mappers/map-to-driver-list-paginated-output.util';
 
 export enum SortDirection {
   Asc = 'asc',
@@ -30,12 +28,11 @@ export enum DriverSortField {
   Email = 'email',
 }
 
-export type ListPaginatedOutput<I> = {
+export type PaginatedOutput = {
   page: number;
   pageSize: number;
   pageCount: number;
   totalCount: number;
-  items: I;
 };
 
 export async function getDriverListHandler(
@@ -47,18 +44,10 @@ export async function getDriverListHandler(
 
     const { items, totalCount } = await driversService.findAll(queryInput);
 
-    // const driverListOutput = items.map(mapToDriverOutput);
-
-    const result = formatJsonApiResponse<DriverOutput>({
-      entities: items,
-      entityType: 'drivers',
-      meta: {
-        page: queryInput.pageNumber,
-        pageSize: queryInput.pageSize,
-        pageCount: Math.ceil(totalCount / queryInput.pageSize),
-        totalCount,
-      },
-      attributeMapper: mapToDriverOutput,
+    const result = mapToDriverListPaginatedOutput(items, {
+      pageNumber: queryInput.pageNumber,
+      pageSize: queryInput.pageSize,
+      totalCount,
     });
 
     res.send(result);

@@ -2,14 +2,16 @@ import { Response } from 'express';
 import { RepositoryNotFoundError } from './repository-not-found.error';
 import { HttpStatus } from '../types/http-statuses';
 import { createErrorMessages } from '../middlewares/validation/input-validtion-result.middleware';
-import { DomainError, DomainErrorCode } from './domain.error';
+import { DomainError } from './domain.error';
 
 export function errorsHandler(error: unknown, res: Response): void {
   if (error instanceof RepositoryNotFoundError) {
-    res.status(HttpStatus.NotFound).send(
+    const httpStatus = HttpStatus.NotFound;
+
+    res.status(httpStatus).send(
       createErrorMessages([
         {
-          status: HttpStatus.NotFound,
+          status: httpStatus,
           detail: error.message,
         },
       ]),
@@ -17,22 +19,20 @@ export function errorsHandler(error: unknown, res: Response): void {
 
     return;
   }
+
   if (error instanceof DomainError) {
-    let httpStatus: HttpStatus;
+    const httpStatus = HttpStatus.UnprocessableEntity;
 
-    if (error.code === DomainErrorCode.BadRequest) {
-      httpStatus = HttpStatus.BadRequest;
-    } else {
-      httpStatus = HttpStatus.InternalServerError;
-    }
-
-    res
-      .status(httpStatus)
-      .send(
-        createErrorMessages([
-          { status: httpStatus, source: error.source, detail: error.message },
-        ]),
-      );
+    res.status(httpStatus).send(
+      createErrorMessages([
+        {
+          status: httpStatus,
+          source: error.source,
+          detail: error.message,
+          code: error.code,
+        },
+      ]),
+    );
 
     return;
   }
