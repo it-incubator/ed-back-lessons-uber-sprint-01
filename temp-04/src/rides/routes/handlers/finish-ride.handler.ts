@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { createErrorMessages } from '../../../core/middlewares/validation/input-validtion-result.middleware';
-import { ridesRepository } from '../../repositories/rides.repository';
+import { ridesService } from '../../application/rides.service';
+import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function finishRideHandler(
   req: Request<{ id: string }, {}, {}>,
@@ -9,34 +9,11 @@ export async function finishRideHandler(
 ) {
   try {
     const id = req.params.id;
-    const ride = await ridesRepository.findById(id);
 
-    if (!ride) {
-      res
-        .status(HttpStatus.NotFound)
-        .send(
-          createErrorMessages([{ field: 'id', message: 'Ride not found' }]),
-        );
-
-      return;
-    }
-
-    if (ride.finishedAt) {
-      res
-        .status(HttpStatus.BadRequest)
-        .send(
-          createErrorMessages([
-            { field: 'id', message: 'Ride already finished' },
-          ]),
-        );
-
-      return;
-    }
-
-    await ridesRepository.finishedRide(id, new Date());
+    await ridesService.finishedRide(id);
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (e: unknown) {
-    res.sendStatus(HttpStatus.InternalServerError);
+    errorsHandler(e, res);
   }
 }

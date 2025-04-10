@@ -1,20 +1,20 @@
 import { driversRepository } from '../repositories/drivers.repository';
 import { WithId } from 'mongodb';
 import { Driver } from '../types/driver';
-import { DriverQueryInput } from '../routes/handlers/get-driver-list.handler';
 import { ridesRepository } from '../../rides/repositories/rides.repository';
 import { DomainError } from '../../core/errors/domain.error';
 import { DriverAttributesInput } from '../input/driver-attributes.input';
+import { DriverQueryInput } from '../input/driver-query.input';
 
-enum DriverErrorCode {
+export enum DriverErrorCode {
   HasActiveRide = 'DRIVER_HAS_ACTIVE_RIDE',
 }
 
 export const driversService = {
-  async findAll(
+  async findMany(
     queryDto: DriverQueryInput,
   ): Promise<{ items: WithId<Driver>[]; totalCount: number }> {
-    return driversRepository.findAll(queryDto);
+    return driversRepository.findMany(queryDto);
   },
 
   async findByIdOrFail(id: string): Promise<WithId<Driver>> {

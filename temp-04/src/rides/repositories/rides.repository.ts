@@ -1,26 +1,49 @@
 import { Ride } from '../types/ride';
-import { rideCollection } from '../../db/mongo.db';
+import { driverCollection, rideCollection } from '../../db/mongo.db';
 import { ObjectId, WithId } from 'mongodb';
+import { RepositoryNotFoundError } from '../../core/errors/repository-not-found.error';
+import { RideQueryInput } from '../input/ride-query.input';
 
 export const ridesRepository = {
-  async findAll(): Promise<WithId<Ride>[]> {
-    return rideCollection.find().toArray();
+  async findMany(
+    queryDto: RideQueryInput,
+  ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
+    const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+    const filter = {};
+    const skip = (pageNumber - 1) * pageSize;
+
+    const items = await rideCollection
+      .find(filter)
+      .sort({ [sortBy]: sortDirection })
+      .skip(skip)
+      .limit(pageSize)
+      .toArray();
+
+    const totalCount = await driverCollection.countDocuments(filter);
+    return { items, totalCount };
   },
 
   async findById(id: string): Promise<WithId<Ride> | null> {
     return rideCollection.findOne({ _id: new ObjectId(id) });
   },
+  async findByIdOrFail(id: string): Promise<WithId<Ride>> {
+    const res = await rideCollection.findOne({ _id: new ObjectId(id) });
 
+    if (!res) {
+      throw new RepositoryNotFoundError('Ride not exist');
+    }
+    return res;
+  },
   async findActiveRideByDriverId(
     driverId: string,
   ): Promise<WithId<Ride> | null> {
     return rideCollection.findOne({ driverId, finishedAt: null });
   },
 
-  async createRide(newRide: Ride): Promise<WithId<Ride>> {
+  async createRide(newRide: Ride): Promise<string> {
     const insertResult = await rideCollection.insertOne(newRide);
 
-    return { ...newRide, _id: insertResult.insertedId };
+    return insertResult.insertedId.toString();
   },
 
   async finishedRide(id: string, finishedAt: Date) {

@@ -1,15 +1,25 @@
 import { Request, Response } from 'express';
-import { ridesRepository } from '../../repositories/rides.repository';
-import { mapToRideViewModelUtil } from '../mappers/map-to-ride-view-model.util';
-import { HttpStatus } from '../../../core/types/http-statuses';
+import { ridesService } from '../../application/rides.service';
+import { errorsHandler } from '../../../core/errors/errors.handler';
+import { mapToRideListPaginatedOutput } from '../mappers/map-to-ride-list-paginated-output.util';
+import { RideQueryInput } from '../../input/ride-query.input';
 
-export async function getRideListHandler(req: Request, res: Response) {
+export async function getRideListHandler(
+  req: Request<{}, {}, {}, RideQueryInput>,
+  res: Response,
+) {
   try {
-    const rides = await ridesRepository.findAll();
+    const queryInput = req.query;
 
-    const rideViewModels = rides.map(mapToRideViewModelUtil);
-    res.send(rideViewModels);
+    const { items, totalCount } = await ridesService.findMany(queryInput);
+
+    const rideListOutput = mapToRideListPaginatedOutput(items, {
+      pageNumber: queryInput.pageNumber,
+      pageSize: queryInput.pageSize,
+      totalCount,
+    });
+    res.send(rideListOutput);
   } catch (e: unknown) {
-    res.sendStatus(HttpStatus.InternalServerError);
+    errorsHandler(e, res);
   }
 }

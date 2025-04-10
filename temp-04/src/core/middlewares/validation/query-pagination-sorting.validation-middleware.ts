@@ -1,5 +1,5 @@
-import { SortDirection } from '../../../drivers/routes/handlers/get-driver-list.handler';
 import { query } from 'express-validator';
+import { SortDirection } from '../../types/sort-direction';
 
 // Дефолтные значения
 const DEFAULT_PAGE_NUMBER = 1;

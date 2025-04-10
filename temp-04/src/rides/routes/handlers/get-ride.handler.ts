@@ -1,29 +1,18 @@
 import { Request, Response } from 'express';
-import { ridesRepository } from '../../repositories/rides.repository';
-import { HttpStatus } from '../../../core/types/http-statuses';
-import { createErrorMessages } from '../../../core/middlewares/validation/input-validtion-result.middleware';
-import { mapToRideViewModelUtil } from '../mappers/map-to-ride-view-model.util';
+import { mapToRideOutputUtil } from '../mappers/map-to-ride-output.util';
+import { ridesService } from '../../application/rides.service';
+import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function getRideHandler(req: Request, res: Response) {
   try {
     const id = req.params.id;
 
-    const ride = await ridesRepository.findById(id);
+    const ride = await ridesService.findByIdOrFail(id);
 
-    if (!ride) {
-      res
-        .status(HttpStatus.NotFound)
-        .send(
-          createErrorMessages([{ field: 'id', message: 'Ride not found' }]),
-        );
+    const rideOutput = mapToRideOutputUtil(ride);
 
-      return;
-    }
-
-    const rideViewModel = mapToRideViewModelUtil(ride);
-
-    res.send(rideViewModel);
+    res.send(rideOutput);
   } catch (e: unknown) {
-    res.sendStatus(HttpStatus.InternalServerError);
+    errorsHandler(e, res);
   }
 }

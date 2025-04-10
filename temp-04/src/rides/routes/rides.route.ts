@@ -2,17 +2,23 @@ import { Router } from 'express';
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
 import { superAdminGuardMiddleware } from '../../auth/middlewares/super-admin.guard-middleware';
 import { idValidation } from '../../core/middlewares/validation/params-id.validation-middleware';
-import { rideInputDtoValidation } from './ride.input-dto.validation-middleware';
+import { rideCreateInputValidation } from './ride.input-dto.validation-middleware';
 import { createRideHandler } from './handlers/create-ride.handler';
 import { getRideListHandler } from './handlers/get-ride-list.handler';
 import { getRideHandler } from './handlers/get-ride.handler';
 import { finishRideHandler } from './handlers/finish-ride.handler';
+import { paginationAndSortingValidation } from '../../core/middlewares/validation/query-pagination-sorting.validation-middleware';
+import { RideSortField } from '../types/ride-sort-field';
 
 export const ridesRoute = Router({});
 
 ridesRoute.use(superAdminGuardMiddleware);
 
-ridesRoute.get('', getRideListHandler);
+ridesRoute.get(
+  '',
+  paginationAndSortingValidation(RideSortField),
+  getRideListHandler,
+);
 
 ridesRoute.get(
   '/:id',
@@ -23,7 +29,7 @@ ridesRoute.get(
 
 ridesRoute.post(
   '',
-  rideInputDtoValidation,
+  rideCreateInputValidation,
   inputValidationResultMiddleware,
   createRideHandler,
 );

@@ -4,9 +4,9 @@ import { Express } from 'express';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { RIDES_PATH } from '../../../src/core/paths/paths';
 import { generateBasicAuthToken } from '../generate-admin-auth-token';
-import { RideViewModel } from '../../../src/rides/types/ride-view-model';
+import { RideDataOutput } from '../../../src/rides/types/ride-data.output';
 
-export async function getRideById<R = RideViewModel>(
+export async function getRideById<R = RideDataOutput>(
   app: Express,
   rideId: string,
   expectedStatus?: HttpStatus,
