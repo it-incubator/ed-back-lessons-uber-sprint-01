@@ -4,19 +4,16 @@ import { Express } from 'express';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { RIDES_PATH } from '../../../src/core/paths/paths';
 import { generateBasicAuthToken } from '../generate-admin-auth-token';
-import { RideDataOutput } from '../../../src/rides/routes/output/ride-data.output';
+import { RideOutput } from '../../../src/rides/routes/output/ride.output';
 
-export async function getRideById<R = RideDataOutput>(
+export async function getRideById(
   app: Express,
   rideId: string,
-  expectedStatus?: HttpStatus,
-): Promise<R> {
-  const testStatus = expectedStatus ?? HttpStatus.Ok;
-
+): Promise<RideOutput> {
   const getResponse = await request(app)
     .get(`${RIDES_PATH}/${rideId}`)
     .set('Authorization', generateBasicAuthToken())
-    .expect(testStatus);
+    .expect(HttpStatus.Ok);
 
   return getResponse.body;
 }

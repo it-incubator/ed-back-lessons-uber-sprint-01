@@ -7,17 +7,23 @@ import { createDriver } from '../drivers/create-driver';
 import { generateBasicAuthToken } from '../generate-admin-auth-token';
 import { RIDES_PATH } from '../../../src/core/paths/paths';
 import { getRideDto } from './get-ride-dto';
-import { RideDataOutput } from '../../../src/rides/routes/output/ride-data.output';
+import { ResourceType } from '../../../src/core/types/resource-type';
+import { RideOutput } from '../../../src/rides/routes/output/ride.output';
 
 export async function createRide(
   app: Express,
   rideDto?: RideAttributes,
-): Promise<RideDataOutput> {
+): Promise<RideOutput> {
   const driver = await createDriver(app);
 
-  const defaultRideData = getRideDto(driver.id);
+  const defaultRideData = getRideDto(driver.data.id);
 
-  const testRideData = { ...defaultRideData, ...rideDto };
+  const testRideData = {
+    data: {
+      type: ResourceType.Rides,
+      attributes: { ...defaultRideData, ...rideDto },
+    },
+  };
 
   const createdRideResponse = await request(app)
     .post(RIDES_PATH)

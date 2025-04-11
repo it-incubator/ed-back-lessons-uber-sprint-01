@@ -3,13 +3,14 @@ import { driversService } from '../../application/drivers.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { mapToDriverListPaginatedOutput } from '../mappers/map-to-driver-list-paginated-output.util';
 import { DriverQueryInput } from '../input/driver-query.input';
+import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set-default-sort-and-pagination';
 
 export async function getDriverListHandler(
   req: Request<{}, {}, {}, DriverQueryInput>,
   res: Response,
 ) {
   try {
-    const queryInput = req.query;
+    const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
 
     const { items, totalCount } = await driversService.findMany(queryInput);
 

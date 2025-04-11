@@ -38,35 +38,34 @@ describe('Rides API', () => {
       .set('Authorization', adminToken)
       .expect(HttpStatus.Ok);
 
-    expect(rideListResponse.body).toBeInstanceOf(Array);
-    expect(rideListResponse.body).toHaveLength(2);
+    expect(rideListResponse.body.data).toBeInstanceOf(Array);
+    expect(rideListResponse.body.data).toHaveLength(2);
   });
 
   it('✅ should return ride by id; GET /api/rides/:id', async () => {
     const createdRide = await createRide(app);
+    const createdRideId = createdRide.data.id;
 
-    const getRide = await getRideById(app, createdRide.id);
+    const getRide = await getRideById(app, createdRideId);
 
-    expect(getRide).toEqual({
-      ...createdRide,
-      id: expect.any(String),
-      startedAt: expect.any(String),
-      finishedAt: null,
-    });
+    expect(getRide.data.id).toBe(createdRideId);
+    expect(getRide.data.attributes).toEqual(createdRide.data.attributes);
   });
 
   it('✅ should finish ride; POST /api/rides/:id/actions/finish', async () => {
     const createdRide = await createRide(app);
+    const createdRideId = createdRide.data.id;
 
     await request(app)
-      .post(`${RIDES_PATH}/${createdRide.id}/actions/finish`)
+      .post(`${RIDES_PATH}/${createdRideId}/actions/finish`)
       .set('Authorization', adminToken)
       .expect(HttpStatus.NoContent);
 
-    const getRide = await getRideById(app, createdRide.id);
+    const getRide = await getRideById(app, createdRideId);
 
-    expect(getRide).toEqual({
-      ...createdRide,
+    expect(getRide.data.id).toBe(createdRideId);
+    expect(getRide.data.attributes).toEqual({
+      ...createdRide.data.attributes,
       finishedAt: expect.any(String),
     });
   });
