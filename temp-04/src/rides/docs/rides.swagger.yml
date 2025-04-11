@@ -15,19 +15,47 @@ tags:
 paths:
   /api/rides:
     get:
-      summary: Get a list of all rides
+      summary: Get a paginated and sorted list of rides
       tags: [ Rides ]
       security:
         - BasicAuth: [ ]
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: Number of items per page
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [ createdAt, clientName, price, startedAt, finishedAt]
+            default: createdAt
+          description: Field to sort by
+        - in: query
+          name: sortDirection
+          schema:
+            type: string
+            enum: [ asc, desc ]
+            default: desc
+          description: Sort direction
+
       responses:
         200:
           description: List of all rides
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RideViewModel'
+                $ref: '#/components/schemas/RideListPaginatedOutput'
     post:
       summary: Create a new ride
       tags: [ Rides ]
@@ -38,20 +66,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RideInputDto'
+              $ref: '#/components/schemas/RideCreateInput'
       responses:
         201:
           description: Ride successfully created for an existing driver with status online
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RideViewModel'
+                $ref: '#/components/schemas/RideOutput'
         400:
           description: Validation error or the driver does not exist or the driver's status is not online
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
+                $ref: '#/components/schemas/ValidationErrorListOutput'
 
   /api/rides/{id}:
     get:
@@ -73,9 +101,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RideViewModel'
+                $ref: '#/components/schemas/RideOutput'
         404:
           description: Ride not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorListOutput'
 
   /api/rides/{id}/actions/finish:
     post:
@@ -99,92 +131,176 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'
+                $ref: '#/components/schemas/ValidationErrorListOutput'
         404:
           description: Ride not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorListOutput'
 
 components:
   schemas:
-    RideViewModel:
+    RideOutput:
       type: object
       required:
-        - id
-        - clientName
-        - driver
-        - vehicle
-        - price
-        - currency
-        - addresses
+        - data
       properties:
+        data:
+          $ref: '#/components/schemas/RideDataOutput'
+
+    RideListPaginatedOutput:
+      type: object
+      required:
+        - meta
+        - data
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginatedOutput'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RideDataOutput'
+
+    RideDataOutput:
+      type: object
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          enum: [ 'rides' ]
+          description: The resource type (must be 'rides')
+          example: rides
         id:
           type: string
           description: Unique identifier for the ride
           example: 60c72b2f9b1e8a001c8e4f1a
-        clientName:
-          type: string
-          description: Name of the client who requested the ride
-          example: Alice Johnson
-        driver:
+        attributes:
           type: object
           required:
-            - id
-            - name
+            - clientName
+            - driver
+            - vehicle
+            - price
+            - currency
+            - addresses
           properties:
-            id:
+            clientName:
               type: string
-              description: The unique identifier for the driver
-              example: 5f1a2b3c4d5e6f7g8h9i0j1k2
-            name:
+              description: Name of the client who requested the ride
+              example: Alice Johnson
+            driver:
+              type: object
+              required:
+                - id
+                - name
+              properties:
+                id:
+                  type: string
+                  description: The unique identifier for the driver
+                  example: 5f1a2b3c4d5e6f7g8h9i0j1k2
+                name:
+                  type: string
+                  description: The full name of the driver
+                  example: Tom Rider
+            vehicle:
+              type: object
+              required:
+                - licensePlate
+                - name
+              properties:
+                licensePlate:
+                  type: string
+                  example: XYZ 1234
+                  description: License plate of the vehicle
+                name:
+                  type: string
+                  example: Toyota Camry
+                  description: Model of the vehicle
+            price:
+              type: number
+              format: float
+              example: 15.75
+              description: Cost of the trip
+            currency:
               type: string
-              description: The full name of the driver
-              example: Tom Rider
-        vehicle:
+              enum: [ usd, eur ]
+              example: usd
+              description: Currency in which the cost is specified
+            startedAt:
+              type: string
+              format: date-time
+              nullable: true
+              example: 2023-03-01T14:30:00Z
+              description: Date and time when the ride started
+            finishedAt:
+              type: string
+              format: date-time
+              nullable: true
+              example: null
+              description: Date and time when the ride finished (if applicable)
+            addresses:
+              type: object
+              required:
+                - from
+                - to
+              properties:
+                from:
+                  type: string
+                  example: 123 Main St, Cityville
+                  description: Starting address of the ride
+                to:
+                  type: string
+                  example: 456 Elm St, Townsville
+                  description: Ending address of the ride
+
+    PaginatedOutput:
+      type: object
+      required:
+        - page
+        - pageSize
+        - pageCount
+        - totalCount
+      properties:
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        pageSize:
+          type: integer
+          description: Number of items per page
+          example: 10
+        pageCount:
+          type: integer
+          description: Total number of pages available
+          example: 5
+        totalCount:
+          type: integer
+          description: Total number of items across all pages
+          example: 100
+
+    RideCreateInput:
+      type: object
+      required:
+        - data
+      properties:
+        data:
           type: object
           required:
-            - licensePlate
-            - name
+            - type
+            - attributes
           properties:
-            licensePlate:
+            type:
               type: string
-              example: XYZ 1234
-              description: License plate of the vehicle
-            name:
-              type: string
-              example: Toyota Camry
-              description: Model of the vehicle
-        price:
-          type: number
-          format: float
-          example: 15.75
-          description: Cost of the trip
-        currency:
-          type: string
-          enum: [ usd, eur ]
-          example: usd
-          description: Currency in which the cost is specified
-        createdAt:
-          type: string
-          format: date-time
-          example: 2023-03-01T14:30:00Z
-          description: Date and time when the ride was created
-        updatedAt:
-          type: string
-          format: date-time
-          nullable: true
-          example: null
-          description: Date and time of the last update to the ride (if applicable)
-        addresses:
-          type: object
-          properties:
-            from:
-              type: string
-              example: 123 Main St, Cityville
-              description: Starting address of the ride
-            to:
-              type: string
-              example: 456 Elm St, Townsville
-              description: Ending address of the ride
-    RideInputDto:
+              enum: [ 'rides' ]
+              description: The resource type (must be 'rides')
+              example: rides
+            attributes:
+              $ref: '#/components/schemas/RideAttributes'
+    RideAttributes:
       type: object
       required:
         - clientName
@@ -220,19 +336,43 @@ components:
           type: string
           example: 456 Elm St, Townsville
           description: Ending address of the ride
-    ValidationError:
+    ValidationErrorOutput:
       type: object
+      required:
+        - status
+        - detail
+        - source
       properties:
-        field:
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code of the error
+          example: 400
+        detail:
           type: string
-          example: clientName
-        message:
+          description: Detailed error message
+          example: "Client name is required"
+        source:
+          type: object
+          properties:
+            pointer:
+              type: string
+              description: JSON pointer to the field that caused the error
+              example: "clientName"
+        code:
           type: string
-          example: Client name is required
-    ValidationErrorResponse:
+          nullable: true
+          description: Optional error code
+          example: null
+          default: null
+
+    ValidationErrorListOutput:
       type: object
+      required:
+        - errors
       properties:
-        errorMessages:
+        errors:
           type: array
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/ValidationErrorOutput'
+          description: List of validation errors
