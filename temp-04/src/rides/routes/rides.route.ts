@@ -17,6 +17,7 @@ ridesRoute.use(superAdminGuardMiddleware);
 ridesRoute.get(
   '',
   paginationAndSortingValidation(RideSortField),
+  inputValidationResultMiddleware,
   getRideListHandler,
 );
 

@@ -14,8 +14,9 @@ export enum RideErrorCode {
 export const ridesService = {
   async findMany(
     queryDto: RideQueryInput,
+    driverId?: string,
   ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
-    return ridesRepository.findMany(queryDto);
+    return ridesRepository.findMany(queryDto, driverId);
   },
 
   async findByIdOrFail(id: string): Promise<WithId<Ride>> {

@@ -3,7 +3,10 @@ import { HttpStatus } from '../../../core/types/http-statuses';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { driversService } from '../../application/drivers.service';
 
-export async function deleteDriverHandler(req: Request, res: Response) {
+export async function deleteDriverHandler(
+  req: Request<{ id: string }>,
+  res: Response,
+) {
   try {
     const id = req.params.id;
 

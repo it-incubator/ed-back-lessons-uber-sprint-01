@@ -7,9 +7,12 @@ import { RideQueryInput } from '../input/ride-query.input';
 export const ridesRepository = {
   async findMany(
     queryDto: RideQueryInput,
+    driverId?: string,
   ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
-    const filter = {};
+    const filter = {
+      ...(driverId ? { 'driver.id': driverId } : {}),
+    };
     const skip = (pageNumber - 1) * pageSize;
 
     const items = await rideCollection

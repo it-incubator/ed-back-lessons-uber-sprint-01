@@ -3,7 +3,10 @@ import { mapToRideOutputUtil } from '../mappers/map-to-ride-output.util';
 import { ridesService } from '../../application/rides.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 
-export async function getRideHandler(req: Request, res: Response) {
+export async function getRideHandler(
+  req: Request<{ id: string }>,
+  res: Response,
+) {
   try {
     const id = req.params.id;
 

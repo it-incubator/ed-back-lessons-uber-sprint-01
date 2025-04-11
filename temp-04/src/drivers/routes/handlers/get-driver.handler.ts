@@ -4,7 +4,10 @@ import { mapToDriverOutput } from '../mappers/map-to-driver-output.util';
 import { driversService } from '../../application/drivers.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 
-export async function getDriverHandler(req: Request, res: Response) {
+export async function getDriverHandler(
+  req: Request<{ id: string }>,
+  res: Response,
+) {
   try {
     const id = req.params.id;
 

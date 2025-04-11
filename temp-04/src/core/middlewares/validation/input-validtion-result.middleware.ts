@@ -32,7 +32,7 @@ const formatErrors = (error: ValidationError): ValidationErrorType => {
 };
 
 export const inputValidationResultMiddleware = (
-  req: Request,
+  req: Request<{}, {}, {}, {}>,
   res: Response,
   next: NextFunction,
 ) => {
