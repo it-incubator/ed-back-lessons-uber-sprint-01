@@ -18,7 +18,7 @@ export async function createRideHandler(
 
     if (!driver) {
       res
-        .status(HttpStatus.BadRequest)
+        .status(HttpStatus.NotFound)
         .send(
           createErrorMessages([{ field: 'id', message: 'Driver not found' }]),
         );

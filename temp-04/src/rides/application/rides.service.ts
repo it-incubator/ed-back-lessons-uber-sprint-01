@@ -14,9 +14,17 @@ export enum RideErrorCode {
 export const ridesService = {
   async findMany(
     queryDto: RideQueryInput,
-    driverId?: string,
   ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
-    return ridesRepository.findMany(queryDto, driverId);
+    return ridesRepository.findMany(queryDto);
+  },
+
+  async findRidesByDriver(
+    queryDto: RideQueryInput,
+    driverId: string,
+  ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
+    await driversRepository.findByIdOrFail(driverId);
+
+    return ridesRepository.findRidesByDriver(queryDto, driverId);
   },
 
   async findByIdOrFail(id: string): Promise<WithId<Ride>> {
@@ -63,7 +71,7 @@ export const ridesService = {
     return await ridesRepository.createRide(newRide);
   },
 
-  async finishedRide(id: string) {
+  async finishRide(id: string) {
     const ride = await ridesRepository.findByIdOrFail(id);
 
     if (ride.finishedAt) {
@@ -72,6 +80,6 @@ export const ridesService = {
         RideErrorCode.AlreadyFinished,
       );
     }
-    await ridesRepository.finishedRide(id, new Date());
+    await ridesRepository.finishRide(id, new Date());
   },
 };

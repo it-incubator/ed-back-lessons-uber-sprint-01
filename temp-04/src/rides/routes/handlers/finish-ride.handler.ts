@@ -10,7 +10,7 @@ export async function finishRideHandler(
   try {
     const id = req.params.id;
 
-    await ridesService.finishedRide(id);
+    await ridesService.finishRide(id);
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (e: unknown) {

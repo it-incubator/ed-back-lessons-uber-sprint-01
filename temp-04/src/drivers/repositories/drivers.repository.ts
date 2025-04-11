@@ -30,14 +30,15 @@ export const driversRepository = {
         : {}),
     };
 
-    const items = await driverCollection
-      .find(filter)
-      .sort({ [sortBy]: sortDirection })
-      .skip(skip)
-      .limit(pageSize)
-      .toArray();
-
-    const totalCount = await driverCollection.countDocuments(filter);
+    const [items, totalCount] = await Promise.all([
+      driverCollection
+        .find(filter)
+        .sort({ [sortBy]: sortDirection })
+        .skip(skip)
+        .limit(pageSize)
+        .toArray(),
+      driverCollection.countDocuments(filter),
+    ]);
 
     return { items, totalCount };
   },

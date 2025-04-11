@@ -1,5 +1,5 @@
 import { Ride } from '../types/ride';
-import { driverCollection, rideCollection } from '../../db/mongo.db';
+import { rideCollection } from '../../db/mongo.db';
 import { ObjectId, WithId } from 'mongodb';
 import { RepositoryNotFoundError } from '../../core/errors/repository-not-found.error';
 import { RideQueryInput } from '../input/ride-query.input';
@@ -7,22 +7,40 @@ import { RideQueryInput } from '../input/ride-query.input';
 export const ridesRepository = {
   async findMany(
     queryDto: RideQueryInput,
-    driverId?: string,
   ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
-    const filter = {
-      ...(driverId ? { 'driver.id': driverId } : {}),
-    };
+    const filter = {};
     const skip = (pageNumber - 1) * pageSize;
 
-    const items = await rideCollection
-      .find(filter)
-      .sort({ [sortBy]: sortDirection })
-      .skip(skip)
-      .limit(pageSize)
-      .toArray();
+    const [items, totalCount] = await Promise.all([
+      rideCollection
+        .find(filter)
+        .sort({ [sortBy]: sortDirection })
+        .skip(skip)
+        .limit(pageSize)
+        .toArray(),
+      rideCollection.countDocuments(filter),
+    ]);
+    return { items, totalCount };
+  },
 
-    const totalCount = await driverCollection.countDocuments(filter);
+  async findRidesByDriver(
+    queryDto: RideQueryInput,
+    driverId: string,
+  ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
+    const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+    const filter = { 'driver.id': driverId };
+    const skip = (pageNumber - 1) * pageSize;
+
+    const [items, totalCount] = await Promise.all([
+      rideCollection
+        .find(filter)
+        .sort({ [sortBy]: sortDirection })
+        .skip(skip)
+        .limit(pageSize)
+        .toArray(),
+      rideCollection.countDocuments(filter),
+    ]);
     return { items, totalCount };
   },
 
@@ -49,7 +67,7 @@ export const ridesRepository = {
     return insertResult.insertedId.toString();
   },
 
-  async finishedRide(id: string, finishedAt: Date) {
+  async finishRide(id: string, finishedAt: Date) {
     const updateResult = await rideCollection.updateOne(
       {
         _id: new ObjectId(id),

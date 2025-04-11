@@ -16,7 +16,7 @@ export async function createDriverHandler(
 
     const createdDriver = await driversService.findByIdOrFail(createdDriverId);
 
-    const driverOutput = mapToDriverOutput(createdDriver!);
+    const driverOutput = mapToDriverOutput(createdDriver);
 
     res.status(HttpStatus.Created).send(driverOutput);
   } catch (e: unknown) {
