@@ -187,7 +187,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationErrorListOutput'
+  /api/drivers/{id}/rides:
+    get:
+      summary: Get a paginated and sorted list of rides by driver ID
+      tags: [ Drivers ]
+      security:
+        - BasicAuth: [ ]
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: Number of items per page
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [ createdAt, clientName, price, startedAt, finishedAt ]
+            default: createdAt
+          description: Field to sort by
+        - in: query
+          name: sortDirection
+          schema:
+            type: string
+            enum: [ asc, desc ]
+            default: desc
+          description: Sort direction
 
+      responses:
+        200:
+          description: List of all rides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RideListPaginatedOutput'
+        404:
+          description: Driver not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorListOutput'
 components:
   securitySchemes:
     BasicAuth:
@@ -292,24 +340,7 @@ components:
               attributes:
                 $ref: '#/components/schemas/DriverOutput/properties/data/properties/attributes'
         meta:
-          type: object
-          required:
-            - page
-            - pageSize
-            - pageCount
-            - totalCount
-          properties:
-            page:
-              type: integer
-              example: 1
-            pageSize:
-              type: integer
-              example: 10
-            pageCount:
-              type: integer
-              example: 5
-            totalCount:
-              type: integer
+          $ref: '#/components/schemas/PaginatedOutput'
     DriverCreateInput:
       type: object
       required:
@@ -406,6 +437,137 @@ components:
             enum: [ wi-fi, child-seat, pet-friendly ]
           description: Features available in the vehicle. Choose from the provided options
           example: [ wi-fi, pet-friendly ]
+    RideListPaginatedOutput:
+      type: object
+      required:
+        - meta
+        - data
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginatedOutput'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RideDataOutput'
+
+    RideDataOutput:
+      type: object
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          enum: [ 'rides' ]
+          description: The resource type (must be 'rides')
+          example: rides
+        id:
+          type: string
+          description: Unique identifier for the ride
+          example: 60c72b2f9b1e8a001c8e4f1a
+        attributes:
+          type: object
+          required:
+            - clientName
+            - driver
+            - vehicle
+            - price
+            - currency
+            - addresses
+          properties:
+            clientName:
+              type: string
+              description: Name of the client who requested the ride
+              example: Alice Johnson
+            driver:
+              type: object
+              required:
+                - id
+                - name
+              properties:
+                id:
+                  type: string
+                  description: The unique identifier for the driver
+                  example: 5f1a2b3c4d5e6f7g8h9i0j1k2
+                name:
+                  type: string
+                  description: The full name of the driver
+                  example: Tom Rider
+            vehicle:
+              type: object
+              required:
+                - licensePlate
+                - name
+              properties:
+                licensePlate:
+                  type: string
+                  example: XYZ 1234
+                  description: License plate of the vehicle
+                name:
+                  type: string
+                  example: Toyota Camry
+                  description: Model of the vehicle
+            price:
+              type: number
+              format: float
+              example: 15.75
+              description: Cost of the trip
+            currency:
+              type: string
+              enum: [ usd, eur ]
+              example: usd
+              description: Currency in which the cost is specified
+            startedAt:
+              type: string
+              format: date-time
+              nullable: true
+              example: 2023-03-01T14:30:00Z
+              description: Date and time when the ride started
+            finishedAt:
+              type: string
+              format: date-time
+              nullable: true
+              example: null
+              description: Date and time when the ride finished (if applicable)
+            addresses:
+              type: object
+              required:
+                - from
+                - to
+              properties:
+                from:
+                  type: string
+                  example: 123 Main St, Cityville
+                  description: Starting address of the ride
+                to:
+                  type: string
+                  example: 456 Elm St, Townsville
+                  description: Ending address of the ride
+    PaginatedOutput:
+      type: object
+      required:
+        - page
+        - pageSize
+        - pageCount
+        - totalCount
+      properties:
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        pageSize:
+          type: integer
+          description: Number of items per page
+          example: 10
+        pageCount:
+          type: integer
+          description: Total number of pages available
+          example: 5
+        totalCount:
+          type: integer
+          description: Total number of items across all pages
+          example: 100
     ValidationErrorOutput:
       type: object
       required:
