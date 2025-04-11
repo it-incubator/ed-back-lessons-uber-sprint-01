@@ -12,8 +12,8 @@ import { createDriverHandler } from './handlers/create-driver.handler';
 import { updateDriverHandler } from './handlers/update-driver.handler';
 import { deleteDriverHandler } from './handlers/delete-driver.handler';
 import { paginationAndSortingValidation } from '../../core/middlewares/validation/query-pagination-sorting.validation-middleware';
-import { DriverSortField } from '../types/driver-sort-field';
-import { RideSortField } from '../../rides/types/ride-sort-field';
+import { DriverSortField } from './input/driver-sort-field';
+import { RideSortField } from '../../rides/routes/input/ride-sort-field';
 import { getDriverRideListHandler } from './handlers/get-driver-ride-list.handler';
 
 export const driversRouter = Router({});

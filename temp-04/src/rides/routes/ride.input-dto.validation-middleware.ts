@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import { Currency } from '../types/ride';
+import { Currency } from '../domain/ride';
 import { resourceTypeValidation } from '../../core/middlewares/validation/resource-type.validation-middleware';
 import { ResourceType } from '../../core/types/resource-type';
 

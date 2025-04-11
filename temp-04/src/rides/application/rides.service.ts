@@ -1,11 +1,11 @@
-import { RideAttributesInput } from '../input/ride-attributes.input';
+import { RideAttributes } from './dtos/ride-attributes';
 import { driversRepository } from '../../drivers/repositories/drivers.repository';
 import { ridesRepository } from '../repositories/rides.repository';
 import { DomainError } from '../../core/errors/domain.error';
 import { DriverErrorCode } from '../../drivers/application/drivers.service';
-import { Ride } from '../types/ride';
+import { Ride } from '../domain/ride';
 import { WithId } from 'mongodb';
-import { RideQueryInput } from '../input/ride-query.input';
+import { RideQueryInput } from '../routes/input/ride-query.input';
 
 export enum RideErrorCode {
   AlreadyFinished = 'RIDE_ALREADY_FINISHED',
@@ -31,7 +31,7 @@ export const ridesService = {
     return ridesRepository.findByIdOrFail(id);
   },
 
-  async create(dto: RideAttributesInput): Promise<string> {
+  async create(dto: RideAttributes): Promise<string> {
     const driver = await driversRepository.findByIdOrFail(dto.driverId);
 
     // Если у водителя сейчас есть заказ, то создать новую поездку нельзя

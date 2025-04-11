@@ -1,8 +1,8 @@
 import { WithId } from 'mongodb';
-import { Driver } from '../../types/driver';
+import { Driver } from '../../domain/driver';
 import { ResourceType } from '../../../core/types/resource-type';
-import { DriverListPaginatedOutput } from '../../types/driver-list-paginated.output';
-import { DriverDataOutput } from '../../types/driver-data.output';
+import { DriverListPaginatedOutput } from '../output/driver-list-paginated.output';
+import { DriverDataOutput } from '../output/driver-data.output';
 
 export function mapToDriverListPaginatedOutput(
   drivers: WithId<Driver>[],

@@ -4,7 +4,7 @@ import { Express } from 'express';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { RIDES_PATH } from '../../../src/core/paths/paths';
 import { generateBasicAuthToken } from '../generate-admin-auth-token';
-import { RideDataOutput } from '../../../src/rides/types/ride-data.output';
+import { RideDataOutput } from '../../../src/rides/routes/output/ride-data.output';
 
 export async function getRideById<R = RideDataOutput>(
   app: Express,

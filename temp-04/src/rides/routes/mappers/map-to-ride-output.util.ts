@@ -1,7 +1,7 @@
 import { WithId } from 'mongodb';
-import { Ride } from '../../types/ride';
+import { Ride } from '../../domain/ride';
 import { ResourceType } from '../../../core/types/resource-type';
-import { RideOutput } from '../../types/ride.output';
+import { RideOutput } from '../output/ride.output';
 
 export function mapToRideOutputUtil(ride: WithId<Ride>): RideOutput {
   return {

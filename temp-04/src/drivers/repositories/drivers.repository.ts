@@ -1,9 +1,9 @@
-import { Driver } from '../types/driver';
+import { Driver } from '../domain/driver';
 import { driverCollection } from '../../db/mongo.db';
 import { ObjectId, WithId } from 'mongodb';
 import { RepositoryNotFoundError } from '../../core/errors/repository-not-found.error';
-import { DriverAttributesInput } from '../input/driver-attributes.input';
-import { DriverQueryInput } from '../input/driver-query.input';
+import { DriverAttributes } from '../application/dtos/driver-attributes';
+import { DriverQueryInput } from '../routes/input/driver-query.input';
 
 export const driversRepository = {
   async findMany(
@@ -62,7 +62,7 @@ export const driversRepository = {
     return insertResult.insertedId.toString();
   },
 
-  async update(id: string, dto: DriverAttributesInput): Promise<void> {
+  async update(id: string, dto: DriverAttributes): Promise<void> {
     const updateResult = await driverCollection.updateOne(
       {
         _id: new ObjectId(id),

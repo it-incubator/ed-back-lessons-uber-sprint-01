@@ -1,4 +1,4 @@
-import { DriverInput } from '../../../src/drivers/input/driver.input';
+import { DriverInput } from '../../../src/drivers/routes/input/driver.input';
 
 export function getDriverDto(): DriverInput {
   return {

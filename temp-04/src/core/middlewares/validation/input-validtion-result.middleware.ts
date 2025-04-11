@@ -16,7 +16,7 @@ export const createErrorMessages = (
       status: error.status,
       detail: error.detail, //error message
       source: { pointer: error.source ?? '' }, //error field
-      ...(error.code ? { code: error.code } : {}), //domain error code
+      code: error.code ?? null, //domain error code
     })),
   };
 };

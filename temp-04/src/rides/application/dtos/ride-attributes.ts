@@ -1,6 +1,6 @@
-import { Currency } from '../types/ride';
+import { Currency } from '../../domain/ride';
 
-export type RideAttributesInput = {
+export type RideAttributes = {
   clientName: string;
   price: number;
   currency: Currency;

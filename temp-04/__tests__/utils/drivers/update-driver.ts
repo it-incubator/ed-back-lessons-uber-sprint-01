@@ -1,7 +1,7 @@
 // @ts-ignore
 import request from 'supertest';
 import { Express } from 'express';
-import { DriverInput } from '../../../src/drivers/input/driver.input';
+import { DriverInput } from '../../../src/drivers/routes/input/driver.input';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { getDriverDto } from './get-driver-dto';
 import { DRIVERS_PATH } from '../../../src/core/paths/paths';

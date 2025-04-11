@@ -5,7 +5,7 @@ import request from 'supertest';
 import { setupApp } from '../../../src/setup-app';
 import { generateBasicAuthToken } from '../../utils/generate-admin-auth-token';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
-import { Currency } from '../../../src/rides/types/ride';
+import { Currency } from '../../../src/rides/domain/ride';
 import { clearDb } from '../../utils/clear-db';
 import { createRide } from '../../utils/rides/create-ride';
 import { RIDES_PATH } from '../../../src/core/paths/paths';

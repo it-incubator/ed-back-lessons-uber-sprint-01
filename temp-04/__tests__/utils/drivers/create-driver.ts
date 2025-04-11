@@ -1,12 +1,12 @@
 // @ts-ignore
 import request from 'supertest';
-import { DriverInput } from '../../../src/drivers/input/driver.input';
+import { DriverInput } from '../../../src/drivers/routes/input/driver.input';
 import { Express } from 'express';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { generateBasicAuthToken } from '../generate-admin-auth-token';
 import { DRIVERS_PATH } from '../../../src/core/paths/paths';
 import { getDriverDto } from './get-driver-dto';
-import { DriverOutput } from '../../../src/drivers/types/driver.output';
+import { DriverOutput } from '../../../src/drivers/routes/output/driver.output';
 
 export async function createDriver(
   app: Express,

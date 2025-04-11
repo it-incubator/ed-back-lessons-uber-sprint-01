@@ -1,6 +1,6 @@
 import { Collection, Db, MongoClient } from 'mongodb';
-import { Driver } from '../drivers/types/driver';
-import { Ride } from '../rides/types/ride';
+import { Driver } from '../drivers/domain/driver';
+import { Ride } from '../rides/domain/ride';
 import { SETTINGS } from '../core/settings/settings';
 
 const DRIVER_COLLECTION_NAME = 'drivers';

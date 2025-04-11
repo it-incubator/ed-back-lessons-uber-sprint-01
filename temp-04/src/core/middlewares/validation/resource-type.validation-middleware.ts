@@ -5,5 +5,5 @@ export function resourceTypeValidation(resourceType: ResourceType) {
   return body('data.type')
     .isString()
     .equals(resourceType)
-    .withMessage("Resource type must be 'drivers'");
+    .withMessage(`Resource type must be ${resourceType}`);
 }

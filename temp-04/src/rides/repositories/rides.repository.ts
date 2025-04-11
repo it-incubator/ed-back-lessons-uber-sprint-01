@@ -1,8 +1,8 @@
-import { Ride } from '../types/ride';
+import { Ride } from '../domain/ride';
 import { rideCollection } from '../../db/mongo.db';
 import { ObjectId, WithId } from 'mongodb';
 import { RepositoryNotFoundError } from '../../core/errors/repository-not-found.error';
-import { RideQueryInput } from '../input/ride-query.input';
+import { RideQueryInput } from '../routes/input/ride-query.input';
 
 export const ridesRepository = {
   async findMany(

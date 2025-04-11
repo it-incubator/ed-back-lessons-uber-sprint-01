@@ -1,10 +1,10 @@
 import { driversRepository } from '../repositories/drivers.repository';
 import { WithId } from 'mongodb';
-import { Driver } from '../types/driver';
+import { Driver } from '../domain/driver';
 import { ridesRepository } from '../../rides/repositories/rides.repository';
 import { DomainError } from '../../core/errors/domain.error';
-import { DriverAttributesInput } from '../input/driver-attributes.input';
-import { DriverQueryInput } from '../input/driver-query.input';
+import { DriverAttributes } from './dtos/driver-attributes';
+import { DriverQueryInput } from '../routes/input/driver-query.input';
 
 export enum DriverErrorCode {
   HasActiveRide = 'DRIVER_HAS_ACTIVE_RIDE',
@@ -21,7 +21,7 @@ export const driversService = {
     return driversRepository.findByIdOrFail(id);
   },
 
-  async create(dto: DriverAttributesInput): Promise<string> {
+  async create(dto: DriverAttributes): Promise<string> {
     const newDriver: Driver = {
       name: dto.name,
       phoneNumber: dto.phoneNumber,
@@ -40,7 +40,7 @@ export const driversService = {
     return driversRepository.create(newDriver);
   },
 
-  async update(id: string, dto: DriverAttributesInput): Promise<void> {
+  async update(id: string, dto: DriverAttributes): Promise<void> {
     await driversRepository.update(id, dto);
     return;
   },

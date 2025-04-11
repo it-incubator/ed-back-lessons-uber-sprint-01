@@ -8,7 +8,7 @@ import { getRideListHandler } from './handlers/get-ride-list.handler';
 import { getRideHandler } from './handlers/get-ride.handler';
 import { finishRideHandler } from './handlers/finish-ride.handler';
 import { paginationAndSortingValidation } from '../../core/middlewares/validation/query-pagination-sorting.validation-middleware';
-import { RideSortField } from '../types/ride-sort-field';
+import { RideSortField } from './input/ride-sort-field';
 
 export const ridesRoute = Router({});
 

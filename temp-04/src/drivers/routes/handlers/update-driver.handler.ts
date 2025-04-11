@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { driversService } from '../../application/drivers.service';
-import { DriverUpdateInput } from '../../input/driver-update.input';
+import { DriverUpdateInput } from '../input/driver-update.input';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function updateDriverHandler(

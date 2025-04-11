@@ -1,5 +1,5 @@
-import { Currency } from './ride';
-import { ResourceType } from '../../core/types/resource-type';
+import { Currency } from '../../domain/ride';
+import { ResourceType } from '../../../core/types/resource-type';
 
 export type RideDataOutput = {
   type: ResourceType.Rides;

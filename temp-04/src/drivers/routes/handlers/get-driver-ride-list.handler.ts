@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import { RideQueryInput } from '../../../rides/input/ride-query.input';
+import { RideQueryInput } from '../../../rides/routes/input/ride-query.input';
 import { ridesService } from '../../../rides/application/rides.service';
 import { mapToRideListPaginatedOutput } from '../../../rides/routes/mappers/map-to-ride-list-paginated-output.util';
 

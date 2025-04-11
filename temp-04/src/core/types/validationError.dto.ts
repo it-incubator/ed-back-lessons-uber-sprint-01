@@ -4,7 +4,7 @@ type ValidationErrorOutput = {
   status: HttpStatus;
   detail: string;
   source: { pointer: string };
-  code?: string;
+  code: string | null;
 };
 
 export type ValidationErrorListOutput = { errors: ValidationErrorOutput[] };

@@ -2,10 +2,10 @@
 import request from 'supertest';
 // @ts-ignore
 import express from 'express';
-import { VehicleFeature } from '../../../src/drivers/types/driver';
+import { VehicleFeature } from '../../../src/drivers/domain/driver';
 import { setupApp } from '../../../src/setup-app';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
-import { DriverInput } from '../../../src/drivers/input/driver.input';
+import { DriverInput } from '../../../src/drivers/routes/input/driver.input';
 import { generateBasicAuthToken } from '../../utils/generate-admin-auth-token';
 import { getDriverDto } from '../../utils/drivers/get-driver-dto';
 import { clearDb } from '../../utils/clear-db';

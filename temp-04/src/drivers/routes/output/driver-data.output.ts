@@ -1,5 +1,5 @@
-import { VehicleFeature } from './driver';
-import { ResourceType } from '../../core/types/resource-type';
+import { VehicleFeature } from '../../domain/driver';
+import { ResourceType } from '../../../core/types/resource-type';
 
 export type DriverDataOutput = {
   type: ResourceType.Drivers;

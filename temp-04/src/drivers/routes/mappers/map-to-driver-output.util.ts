@@ -1,6 +1,6 @@
 import { WithId } from 'mongodb';
-import { Driver } from '../../types/driver';
-import { DriverOutput } from '../../types/driver.output';
+import { Driver } from '../../domain/driver';
+import { DriverOutput } from '../output/driver.output';
 import { ResourceType } from '../../../core/types/resource-type';
 
 export function mapToDriverOutput(driver: WithId<Driver>): DriverOutput {

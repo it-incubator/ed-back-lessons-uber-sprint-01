@@ -1,6 +1,6 @@
 import { WithId } from 'mongodb';
-import { Ride } from '../../types/ride';
-import { RideListPaginatedOutput } from '../../types/ride-list-paginated.output';
+import { Ride } from '../../domain/ride';
+import { RideListPaginatedOutput } from '../output/ride-list-paginated.output';
 import { ResourceType } from '../../../core/types/resource-type';
 
 export function mapToRideListPaginatedOutput(
