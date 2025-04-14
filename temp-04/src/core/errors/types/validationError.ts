@@ -1,4 +1,4 @@
-import { HttpStatus } from './http-statuses';
+import { HttpStatus } from '../../types/http-statuses';
 
 export type ValidationErrorType = {
   status: HttpStatus;
