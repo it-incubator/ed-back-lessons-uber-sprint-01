@@ -1,0 +1,141 @@
+@startuml
+skinparam linetype ortho
+
+entity "Organization" as Org {
+  * org_id : UUID
+  --
+  name : string
+  domain : string <<unique>>
+}
+
+entity "Matrix" {
+  * matrix_id : UUID
+  --
+  title : string
+  description : text
+  visibility : enum("public","private")
+  org_id : UUID <<FK>>
+  created_by : UUID <<FK>>
+  created_at : datetime
+  updated_at : datetime
+}
+
+entity "Category" {
+  * category_id : UUID
+  --
+  matrix_id : UUID <<FK>>
+  name : string
+  order_index : int
+}
+
+entity "Topic" {
+  * topic_id : UUID
+  --
+  category_id : UUID <<FK>>
+  name : string
+  order_index : int
+}
+
+entity "Subtopic" {
+  * subtopic_id : UUID
+  --
+  topic_id : UUID <<FK>>
+  name : string
+  description : text
+}
+
+entity "Skill" {
+  * skill_id : UUID
+  --
+  description : text
+  type : enum("hard","soft")
+  source : string
+}
+
+entity "Grade" {
+  * grade_code : string <<PK>>
+  --
+  name : string
+  level_group : string
+  rank : int
+}
+
+entity "KnowledgeLevel" as Level {
+  * level_code : int <<PK>>
+  --
+  name : string
+  description : string
+}
+
+entity "Requirement" {
+  * subtopic_id : UUID <<FK>>
+  * grade_code : string <<FK>>
+  --
+  required_level : int <<FK>>
+}
+
+entity "User" {
+  * user_id : UUID
+  --
+  org_id : UUID <<FK>>
+  email : string <<unique>>
+  name : string
+  role : enum("USER","ADMIN","SUPERADMIN")
+}
+
+entity "Assessment" {
+  * assessment_id : UUID
+  --
+  matrix_id : UUID <<FK>>
+  candidate_id : UUID <<FK>>
+  interviewer_id : UUID <<FK>>
+  target_grade : string <<FK>>
+  date : datetime
+  overall_comments : text
+}
+
+entity "AssessmentItem" {
+  * assess_id : UUID <<FK>>
+  * subtopic_id : UUID <<FK>>
+  --
+  interviewer_level : int <<FK>>
+  self_level : int <<FK>>
+  required_level : int <<FK>>
+  missed_points : text
+}
+
+entity "Resource" {
+  * resource_id : UUID
+  --
+  title : string
+  url : string
+}
+
+entity "SkillResource" {
+  * skill_id : UUID <<FK>>
+  * resource_id : UUID <<FK>>
+  --
+  note : string
+}
+
+' Relationships
+Org ||--o{ Matrix
+Org ||--o{ User
+Matrix ||--o{ Category
+Category ||--o{ Topic
+Topic ||--o{ Subtopic
+Subtopic }o--o{ Skill
+Subtopic ||--o{ Requirement
+Grade ||--o{ Requirement
+Level ||--o{ Requirement
+User ||--o{ Assessment : "as candidate"
+User ||--o{ Assessment : "as interviewer"
+Matrix ||--o{ Assessment
+Assessment ||--o{ AssessmentItem
+Subtopic ||--o{ AssessmentItem
+Level ||--o{ AssessmentItem
+Grade ||--o{ Assessment
+Skill }o--o{ SkillResource
+Resource ||--o{ SkillResource
+
+@enduml

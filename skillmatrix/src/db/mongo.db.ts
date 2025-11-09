@@ -1,0 +1,43 @@
+import { Collection, Db, MongoClient } from 'mongodb';
+import { Driver } from '../drivers/domain/driver';
+import { Ride } from '../rides/domain/ride';
+import { SkillMatrix } from '../skill-matrices/domain/skill-matrix';
+import { SETTINGS } from '../core/settings/settings';
+
+const DRIVER_COLLECTION_NAME = 'drivers';
+const RIDE_COLLECTION_NAME = 'rides';
+const SKILL_MATRIX_COLLECTION_NAME = 'skillMatrices';
+
+export let client: MongoClient;
+export let driverCollection: Collection<Driver>;
+export let rideCollection: Collection<Ride>;
+export let skillMatrixCollection: Collection<SkillMatrix>;
+
+// Подключения к бд
+export async function runDB(url: string): Promise<void> {
+  client = new MongoClient(url);
+  const db: Db = client.db(SETTINGS.DB_NAME);
+
+  //Инициализация коллекций
+  driverCollection = db.collection<Driver>(DRIVER_COLLECTION_NAME);
+  rideCollection = db.collection<Ride>(RIDE_COLLECTION_NAME);
+  skillMatrixCollection = db.collection<SkillMatrix>(
+    SKILL_MATRIX_COLLECTION_NAME,
+  );
+
+  try {
+    await client.connect();
+    await db.command({ ping: 1 });
+    console.log('✅ Connected to the database');
+  } catch (e) {
+    await client.close();
+    throw new Error(`❌ Database not connected: ${e}`);
+  }
+}
+
+export async function stopDb() {
+  if (!client) {
+    throw new Error(`❌ No active client`);
+  }
+  await client.close();
+}
