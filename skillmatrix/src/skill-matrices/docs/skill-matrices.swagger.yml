@@ -1,0 +1,378 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  version: 1.0.0
+
+securitySchemes:
+  BasicAuth:
+    type: http
+    scheme: basic
+
+tags:
+  - name: SkillMatrices
+    description: API for managing skill matrices
+
+paths:
+  /api/skill-matrices:
+    get:
+      summary: Get a paginated and sorted list of skill matrices
+      tags: [ SkillMatrices ]
+      security:
+        - BasicAuth: [ ]
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: Number of items per page
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [ createdAt, title ]
+            default: createdAt
+          description: Field to sort by
+        - in: query
+          name: sortDirection
+          schema:
+            type: string
+            enum: [ asc, desc ]
+            default: desc
+          description: Sort direction
+        - in: query
+          name: searchTitleTerm
+          schema:
+            type: string
+          required: false
+          description: Search term for skill matrix title
+      responses:
+        200:
+          description: List of all skill matrices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillMatrixListPaginatedOutput'
+    post:
+      summary: Add a new skill matrix
+      tags: [ SkillMatrices ]
+      security:
+        - BasicAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillMatrixCreateInput'
+      responses:
+        201:
+          description: The skill matrix was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillMatrixOutput'
+        400:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorListOutput'
+
+  /api/skill-matrices/{id}:
+    get:
+      summary: Get a skill matrix by ID
+      tags: [ SkillMatrices ]
+      security:
+        - BasicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The unique identifier of the skill matrix
+          schema:
+            type: string
+            example: 5f1a2b3c4d5e6f7g8h9i0j1k2
+      responses:
+        200:
+          description: The requested skill matrix
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillMatrixOutput'
+        404:
+          description: Skill matrix not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorListOutput'
+    put:
+      summary: Update a skill matrix by ID
+      tags: [ SkillMatrices ]
+      security:
+        - BasicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The unique identifier of the skill matrix
+          schema:
+            type: string
+            example: 5f1a2b3c4d5e6f7g8h9i0j1k2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillMatrixUpdateInput'
+      responses:
+        204:
+          description: Skill matrix updated successfully
+        400:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorListOutput'
+        404:
+          description: Skill matrix not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorListOutput'
+    delete:
+      summary: Delete a skill matrix by ID
+      tags: [ SkillMatrices ]
+      security:
+        - BasicAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The unique identifier of the skill matrix
+          schema:
+            type: string
+            example: 5f1a2b3c4d5e6f7g8h9i0j1k2
+      responses:
+        204:
+          description: Skill matrix deleted successfully
+        404:
+          description: Skill matrix not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorListOutput'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    SkillMatrixOutput:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - type
+            - id
+            - attributes
+          properties:
+            type:
+              type: string
+              enum: [ skill-matrices ]
+              example: skill-matrices
+            id:
+              type: string
+              example: 5f1a2b3c4d5e6f7g8h9i0j1k2
+            attributes:
+              type: object
+              required:
+                - title
+                - description
+                - is_published
+                - createdAt
+              properties:
+                title:
+                  type: string
+                  example: Frontend Developer Skills
+                description:
+                  type: string
+                  example: Comprehensive skill matrix for frontend developers
+                is_published:
+                  type: boolean
+                  example: true
+                createdAt:
+                  type: string
+                  format: date-time
+                  example: 2023-03-05T12:00:00Z
+
+    SkillMatrixListPaginatedOutput:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            required:
+              - type
+              - id
+              - attributes
+            properties:
+              type:
+                type: string
+                enum: [ skill-matrices ]
+                example: skill-matrices
+              id:
+                type: string
+                example: 5f1a2b3c4d5e6f7g8h9i0j1k2
+              attributes:
+                $ref: '#/components/schemas/SkillMatrixOutput/properties/data/properties/attributes'
+        meta:
+          $ref: '#/components/schemas/PaginatedOutput'
+
+    SkillMatrixCreateInput:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - type
+            - attributes
+          properties:
+            type:
+              type: string
+              enum: [ skill-matrices ]
+              description: The resource type
+              example: skill-matrices
+            attributes:
+              $ref: '#/components/schemas/SkillMatrixAttributes'
+
+    SkillMatrixUpdateInput:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - type
+            - id
+            - attributes
+          properties:
+            type:
+              type: string
+              enum: [ skill-matrices ]
+              description: The resource type
+              example: skill-matrices
+            id:
+              type: string
+              description: The unique identifier of the skill matrix
+              example: 5f1a2b3c4d5e6f7g8h9i0j1k2
+            attributes:
+              $ref: '#/components/schemas/SkillMatrixAttributes'
+
+    SkillMatrixAttributes:
+      type: object
+      required:
+        - title
+        - description
+        - is_published
+      properties:
+        title:
+          type: string
+          description: The title of the skill matrix
+          example: Frontend Developer Skills
+          minLength: 3
+          maxLength: 200
+        description:
+          type: string
+          description: The description of the skill matrix
+          example: Comprehensive skill matrix for frontend developers covering React, TypeScript, and modern web technologies
+          minLength: 10
+          maxLength: 1000
+        is_published:
+          type: boolean
+          description: Whether the skill matrix is published
+          example: true
+
+    PaginatedOutput:
+      type: object
+      required:
+        - page
+        - pageSize
+        - pageCount
+        - totalCount
+      properties:
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        pageSize:
+          type: integer
+          description: Number of items per page
+          example: 10
+        pageCount:
+          type: integer
+          description: Total number of pages available
+          example: 5
+        totalCount:
+          type: integer
+          description: Total number of items across all pages
+          example: 100
+
+    ValidationErrorOutput:
+      type: object
+      required:
+        - status
+        - detail
+        - source
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code of the error
+          example: 400
+        detail:
+          type: string
+          description: Detailed error message
+          example: "Title must be at least 3 characters long"
+        source:
+          type: object
+          properties:
+            pointer:
+              type: string
+              description: JSON pointer to the field that caused the error
+              example: "title"
+        code:
+          type: string
+          nullable: true
+          description: Optional error code
+          example: null
+          default: null
+
+    ValidationErrorListOutput:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationErrorOutput'
+          description: List of validation errors

@@ -1,0 +1,81 @@
+@startuml
+skinparam linetype ortho
+
+entity "SkillMatrix" {
+  * matrix_id : UUID
+  --
+  title : string
+  description : text
+  is_published : boolean
+}
+
+entity "MatrixCategory" {
+  * matrix_id : UUID <<FK>>
+  * category_id : UUID <<FK>>
+  --
+  order_index : int
+}
+
+entity "Category" {
+  * category_id : UUID
+  --
+  name : string
+}
+
+entity "Topic" {
+  * topic_id : UUID
+  --
+  category_id : UUID <<FK>>
+  name : string
+  order_index : int
+}
+
+entity "Subtopic" {
+  * subtopic_id : UUID
+  --
+  topic_id : UUID <<FK>>
+  name : string
+  description : text
+}
+
+entity "Skill" {
+  * skill_id : UUID
+  --
+  description : text
+  type : enum("theory","practical","soft")
+}
+
+entity "SubtopicSkill" {
+  * subtopic_id : UUID <<FK>>
+  * skill_id : UUID <<FK>>
+  --
+  required_level : enum("none","novice","intern","advanced")
+}
+
+entity "Requirement" {
+  * subtopic_id : UUID <<FK>>
+  * grade : enum("J1","J2","J3","M1","M2","M3","S1","S2","S3")
+  --
+  required_level : enum("none","novice","intern","advanced")
+}
+
+entity "Resource" {
+  * resource_id : UUID
+  --
+  skill_id : UUID <<FK>>
+  title : string
+  url : string
+  note : string
+}
+
+' Relationships
+SkillMatrix ||--o{ MatrixCategory
+Category ||--o{ MatrixCategory
+Category ||--o{ Topic
+Topic ||--o{ Subtopic
+Subtopic ||--o{ SubtopicSkill
+Skill ||--o{ SubtopicSkill
+Subtopic ||--o{ Requirement
+Skill ||--o{ Resource
+
+@enduml

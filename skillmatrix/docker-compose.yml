@@ -1,0 +1,15 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: uber-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=ed-back-lessons-uber
+    command: mongod --noauth
+    networks:
+      - uber-network
+
+networks:
+  uber-network:
+    driver: bridge
