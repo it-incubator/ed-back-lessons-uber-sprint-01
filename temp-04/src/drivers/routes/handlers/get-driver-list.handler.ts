@@ -22,6 +22,6 @@ export async function getDriverListHandler(
 
     res.send(driversListOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }

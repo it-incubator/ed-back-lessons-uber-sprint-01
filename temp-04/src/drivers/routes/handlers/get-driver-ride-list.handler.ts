@@ -24,6 +24,6 @@ export async function getDriverRideListHandler(
     });
     res.send(rideListOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }

@@ -20,6 +20,6 @@ export async function createDriverHandler(
 
     res.status(HttpStatus.Created).send(driverOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }

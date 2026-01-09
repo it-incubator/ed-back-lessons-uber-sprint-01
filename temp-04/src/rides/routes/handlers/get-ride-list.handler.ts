@@ -21,6 +21,6 @@ export async function getRideListHandler(
     });
     res.send(rideListOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }

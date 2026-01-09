@@ -79,7 +79,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorListOutput'
+                $ref: '#/components/schemas/JsonApiErrorDocument'
 
   /api/rides/{id}:
     get:
@@ -107,7 +107,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorListOutput'
+                $ref: '#/components/schemas/JsonApiErrorDocument'
 
   /api/rides/{id}/actions/finish:
     post:
@@ -131,13 +131,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorListOutput'
+                $ref: '#/components/schemas/JsonApiErrorDocument'
         404:
           description: Ride not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorListOutput'
+                $ref: '#/components/schemas/JsonApiErrorDocument'
 
 components:
   schemas:
@@ -336,37 +336,64 @@ components:
           type: string
           example: 456 Elm St, Townsville
           description: Ending address of the ride
-    ValidationErrorOutput:
+    JsonApiErrorSource:
+      type: object
+      description: Pointer to the associated entity in the request document
+      properties:
+        pointer:
+          type: string
+          description: "JSON Pointer [RFC6901] to request body field. e.g. \"/data/attributes/field\""
+          example: "/data/attributes/clientName"
+        parameter:
+          type: string
+          description: "Query parameter name. e.g. \"?queryParam\""
+          example: "sort"
+
+    JsonApiError:
       type: object
       required:
         - status
-        - detail
-        - source
+        - title
       properties:
         status:
-          type: integer
-          format: int32
-          description: HTTP status code of the error
-          example: 400
-        detail:
           type: string
-          description: Detailed error message
-          example: "Client name is required"
-        source:
-          type: object
-          properties:
-            pointer:
-              type: string
-              description: JSON pointer to the field that caused the error
-              example: "clientName"
+          description: HTTP status code as a string
+          example: "400"
+        title:
+          type: string
+          description: Short, human-readable summary (REQUIRED)
+          example: "Validation Error"
         code:
           type: string
-          nullable: true
-          description: Optional error code
-          example: null
-          default: null
+          description: Application-specific error code
+          example: "RIDE_ALREADY_FINISHED"
+        detail:
+          type: string
+          description: Detailed explanation of the error (optional)
+          example: "Client name is required"
+        source:
+          $ref: '#/components/schemas/JsonApiErrorSource'
+        meta:
+          type: object
+          description: Any extra data
+          additionalProperties: true
 
-    ValidationErrorListOutput:
+    JsonApiErrorDocumentMeta:
+      type: object
+      description: "Meta information: timestamp, path, traceId, etc."
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00.000Z"
+        path:
+          type: string
+          example: "/api/rides"
+        traceId:
+          type: string
+          example: "abc123"
+
+    JsonApiErrorDocument:
       type: object
       required:
         - errors
@@ -374,5 +401,7 @@ components:
         errors:
           type: array
           items:
-            $ref: '#/components/schemas/ValidationErrorOutput'
-          description: List of validation errors
+            $ref: '#/components/schemas/JsonApiError'
+          description: Array of one or more errors
+        meta:
+          $ref: '#/components/schemas/JsonApiErrorDocumentMeta'

@@ -14,6 +14,6 @@ export async function deleteDriverHandler(
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }

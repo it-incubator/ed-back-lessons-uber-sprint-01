@@ -16,6 +16,6 @@ export async function getRideHandler(
 
     res.send(rideOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }
