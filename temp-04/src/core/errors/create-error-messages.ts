@@ -34,8 +34,12 @@ export const createErrorMessages = (
         title: error.title,
       };
 
-      if (error.detail) result.detail = error.detail;
-      if (error.code) result.code = error.code;
+      if (error.detail) {
+        result.detail = error.detail;
+      }
+      if (error.code) {
+        result.code = error.code;
+      }
 
       // Форматируем source
       if (error.source) {
