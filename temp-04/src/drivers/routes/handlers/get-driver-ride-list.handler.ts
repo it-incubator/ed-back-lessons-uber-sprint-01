@@ -4,13 +4,12 @@ import { RideQueryInput } from '../../../rides/routes/input/ride-query.input';
 import { ridesService } from '../../../rides/application/rides.service';
 import { mapToRideListPaginatedOutput } from '../../../rides/routes/mappers/map-to-ride-list-paginated-output.util';
 
-export async function getDriverRideListHandler(
-  req: Request<{ id: string }, {}, {}, RideQueryInput>,
-  res: Response,
-) {
+export async function getDriverRideListHandler(req: Request, res: Response) {
   try {
     const driverId = req.params.id;
-    const queryInput = req.query;
+    // express-validator с .toInt() уже преобразовал строки в числа,
+    // но TypeScript не знает об этом runtime-преобразовании
+    const queryInput = req.query as unknown as RideQueryInput;
 
     const { items, totalCount } = await ridesService.findRidesByDriver(
       queryInput,

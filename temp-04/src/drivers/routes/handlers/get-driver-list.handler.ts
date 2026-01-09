@@ -5,12 +5,13 @@ import { mapToDriverListPaginatedOutput } from '../mappers/map-to-driver-list-pa
 import { DriverQueryInput } from '../input/driver-query.input';
 import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set-default-sort-and-pagination';
 
-export async function getDriverListHandler(
-  req: Request<{}, {}, {}, DriverQueryInput>,
-  res: Response,
-) {
+export async function getDriverListHandler(req: Request, res: Response) {
   try {
-    const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
+    // express-validator с .toInt() уже преобразовал строки в числа,
+    // но TypeScript не знает об этом runtime-преобразовании
+    const queryInput = setDefaultSortAndPaginationIfNotExist(
+      req.query as unknown as DriverQueryInput,
+    );
 
     const { items, totalCount } = await driversService.findMany(queryInput);
 

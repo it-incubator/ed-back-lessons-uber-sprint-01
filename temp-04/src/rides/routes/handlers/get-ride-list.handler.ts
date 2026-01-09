@@ -5,12 +5,13 @@ import { mapToRideListPaginatedOutput } from '../mappers/map-to-ride-list-pagina
 import { RideQueryInput } from '../input/ride-query.input';
 import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set-default-sort-and-pagination';
 
-export async function getRideListHandler(
-  req: Request<{}, {}, {}, RideQueryInput>,
-  res: Response,
-) {
+export async function getRideListHandler(req: Request, res: Response) {
   try {
-    const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
+    // express-validator с .toInt() уже преобразовал строки в числа,
+    // но TypeScript не знает об этом runtime-преобразовании
+    const queryInput = setDefaultSortAndPaginationIfNotExist(
+      req.query as unknown as RideQueryInput,
+    );
 
     const { items, totalCount } = await ridesService.findMany(queryInput);
 
