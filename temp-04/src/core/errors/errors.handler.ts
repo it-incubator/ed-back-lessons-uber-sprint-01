@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { RepositoryNotFoundError } from './repository-not-found.error';
 import { HttpStatus } from '../types/http-statuses';
 import { DomainError } from './domain.error';
@@ -7,7 +7,7 @@ import { createErrorMessages } from './create-error-messages';
 export function errorsHandler(
   error: unknown,
   res: Response,
-  req: Request,
+  req: { path: string },
 ): void {
   if (error instanceof RepositoryNotFoundError) {
     res.status(HttpStatus.NotFound).send(
