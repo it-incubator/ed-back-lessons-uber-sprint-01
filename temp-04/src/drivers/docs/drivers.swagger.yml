@@ -175,14 +175,14 @@ paths:
       responses:
         204:
           description: Driver deleted successfully
-        400:
-          description: Driver is currently on a job (has unfinished ride)
+        404:
+          description: Driver not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonApiErrorDocument'
-        404:
-          description: Driver not found
+        422:
+          description: Unprocessable Entity - Driver is currently on a job (has unfinished ride)
           content:
             application/json:
               schema:
@@ -578,7 +578,7 @@ components:
           example: "/data/attributes/name"
         parameter:
           type: string
-          description: "Query parameter name. e.g. \"?queryParam\""
+          description: "URI query parameter name that caused the error"
           example: "sort"
 
     JsonApiError:

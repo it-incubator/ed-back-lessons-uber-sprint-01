@@ -126,14 +126,14 @@ paths:
       responses:
         204:
           description: Ride finished successfully
-        400:
-          description: The ride has already been finished
+        404:
+          description: Ride not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonApiErrorDocument'
-        404:
-          description: Ride not found
+        422:
+          description: Unprocessable Entity - The ride has already been finished
           content:
             application/json:
               schema:
@@ -346,7 +346,7 @@ components:
           example: "/data/attributes/clientName"
         parameter:
           type: string
-          description: "Query parameter name. e.g. \"?queryParam\""
+          description: "URI query parameter name that caused the error"
           example: "sort"
 
     JsonApiError:

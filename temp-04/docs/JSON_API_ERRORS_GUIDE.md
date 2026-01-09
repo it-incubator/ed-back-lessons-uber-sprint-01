@@ -332,7 +332,7 @@ components:
           example: "/data/attributes/clientName"
         parameter:
           type: string
-          description: "Query parameter name. e.g. \"?queryParam\""
+          description: "URI query parameter name that caused the error"
           example: "sort"
 
     JsonApiError:
