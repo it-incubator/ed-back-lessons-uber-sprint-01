@@ -35,7 +35,9 @@ driversRouter
     const errors = driverInputDtoValidation(req.body);
 
     if (errors.length > 0) {
-      res.status(HttpStatus.BadRequest).send(createErrorMessages(errors));
+      res
+        .status(HttpStatus.UnprocessableEntity)
+        .send(createErrorMessages(errors));
 
       return;
     }
@@ -80,7 +82,9 @@ driversRouter
       const errors = driverInputDtoValidation(req.body);
 
       if (errors.length > 0) {
-        res.status(HttpStatus.BadRequest).send(createErrorMessages(errors));
+        res
+          .status(HttpStatus.UnprocessableEntity)
+          .send(createErrorMessages(errors));
 
         return;
       }
