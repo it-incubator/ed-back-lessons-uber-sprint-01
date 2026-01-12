@@ -26,12 +26,12 @@ export function errorsHandler(
   }
 
   if (error instanceof DomainError) {
-    res.status(HttpStatus.UnprocessableEntity).send(
+    res.status(HttpStatus.Conflict).send(
       createErrorMessages(
         [
           {
-            status: String(HttpStatus.UnprocessableEntity),
-            title: 'Unprocessable Entity',
+            status: String(HttpStatus.Conflict),
+            title: 'Conflict',
             code: error.code,
             detail: error.message,
             source: error.source

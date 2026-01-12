@@ -49,16 +49,16 @@ export const createErrorMessages = (
         if (pointer || error.source.parameter) {
           result.source = {};
           if (pointer) {
-              result.source.pointer = pointer;
+            result.source.pointer = pointer;
           }
           if (error.source.parameter) {
-              result.source.parameter = error.source.parameter;
+            result.source.parameter = error.source.parameter;
           }
         }
       }
 
       if (error.meta) {
-          result.meta = error.meta;
+        result.meta = error.meta;
       }
 
       return result;

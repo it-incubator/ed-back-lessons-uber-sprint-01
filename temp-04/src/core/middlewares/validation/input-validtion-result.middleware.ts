@@ -12,7 +12,7 @@ const formatValidationError = (error: ValidationError): ValidationErrorType => {
   const expressError = error as unknown as FieldValidationError;
 
   return {
-    status: String(HttpStatus.BadRequest),
+    status: String(HttpStatus.UnprocessableEntity),
     title: 'Validation Error',
     detail: expressError.msg,
     source: {
@@ -36,6 +36,6 @@ export const inputValidationResultMiddleware = (
   }
 
   res
-    .status(HttpStatus.BadRequest)
+    .status(HttpStatus.UnprocessableEntity)
     .json(createErrorMessages(errors, req.path));
 };
