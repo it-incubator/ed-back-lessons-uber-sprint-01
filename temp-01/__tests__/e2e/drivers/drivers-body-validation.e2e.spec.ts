@@ -39,7 +39,7 @@ describe('Driver API body validation check', () => {
         email: 'invalid email',
         vehicleMake: '',
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet1.body.errorMessages).toHaveLength(4);
 
@@ -52,7 +52,7 @@ describe('Driver API body validation check', () => {
         vehicleYear: 'year', // incorrect number
         vehicleLicensePlate: '', // empty string
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet2.body.errorMessages).toHaveLength(4);
 
@@ -62,7 +62,7 @@ describe('Driver API body validation check', () => {
         ...correctTestDriverData,
         name: 'A', // too shot
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet3.body.errorMessages).toHaveLength(1);
 
@@ -88,7 +88,7 @@ describe('Driver API body validation check', () => {
         email: 'invalid email',
         vehicleMake: '',
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet1.body.errorMessages).toHaveLength(4);
 
@@ -101,7 +101,7 @@ describe('Driver API body validation check', () => {
         vehicleYear: 'year', // incorrect number
         vehicleLicensePlate: '', // empty string
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet2.body.errorMessages).toHaveLength(4);
 
@@ -111,7 +111,7 @@ describe('Driver API body validation check', () => {
         ...correctTestDriverData,
         name: 'A', //too short
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet3.body.errorMessages).toHaveLength(1);
 
@@ -144,7 +144,7 @@ describe('Driver API body validation check', () => {
           VehicleFeature.WiFi,
         ],
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     const driverResponse = await request(app).get(
       `/api/drivers/${createdDriverId}`,

@@ -66,7 +66,7 @@ describe('Driver API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet1.body.errors).toHaveLength(4);
 
@@ -89,7 +89,7 @@ describe('Driver API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet2.body.errors).toHaveLength(4);
 
@@ -112,7 +112,7 @@ describe('Driver API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet3.body.errors).toHaveLength(4);
 
@@ -154,7 +154,7 @@ describe('Driver API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet1.body.errors).toHaveLength(4);
 
@@ -177,7 +177,7 @@ describe('Driver API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet2.body.errors).toHaveLength(3);
 
@@ -200,7 +200,7 @@ describe('Driver API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet3.body.errors).toHaveLength(1);
 
@@ -246,7 +246,7 @@ describe('Driver API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     const driverResponse = await getDriverById(app, createdDriverId);
 

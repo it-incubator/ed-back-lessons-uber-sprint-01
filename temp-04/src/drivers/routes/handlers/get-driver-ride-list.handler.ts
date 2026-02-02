@@ -7,9 +7,11 @@ import { mapToRideListPaginatedOutput } from '../../../rides/routes/mappers/map-
 export async function getDriverRideListHandler(req: Request, res: Response) {
   try {
     const driverId = req.params.id;
-    // express-validator с .toInt() уже преобразовал строки в числа,
-    // но TypeScript не знает об этом runtime-преобразовании
-    const queryInput = req.query as unknown as RideQueryInput;
+    // Используем req.sanitized.query вместо req.query
+    // Там значения уже санитизированы через matchedData():
+    // - pageNumber и pageSize — числа (благодаря .toInt())
+    // - применены .default() значения
+    const queryInput = req.sanitized?.query as RideQueryInput;
 
     const { items, totalCount } = await ridesService.findRidesByDriver(
       queryInput,
