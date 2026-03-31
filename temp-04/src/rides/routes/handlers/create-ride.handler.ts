@@ -18,6 +18,6 @@ export async function createRideHandler(
 
     res.status(HttpStatus.Created).send(rideOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }

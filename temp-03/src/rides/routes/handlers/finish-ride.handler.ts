@@ -23,7 +23,7 @@ export async function finishRideHandler(
 
     if (ride.finishedAt) {
       res
-        .status(HttpStatus.BadRequest)
+        .status(HttpStatus.Conflict)
         .send(
           createErrorMessages([
             { field: 'id', message: 'Ride already finished' },

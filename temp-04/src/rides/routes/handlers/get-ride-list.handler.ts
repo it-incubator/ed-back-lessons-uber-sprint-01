@@ -3,14 +3,14 @@ import { ridesService } from '../../application/rides.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { mapToRideListPaginatedOutput } from '../mappers/map-to-ride-list-paginated-output.util';
 import { RideQueryInput } from '../input/ride-query.input';
-import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set-default-sort-and-pagination';
 
-export async function getRideListHandler(
-  req: Request<{}, {}, {}, RideQueryInput>,
-  res: Response,
-) {
+export async function getRideListHandler(req: Request, res: Response) {
   try {
-    const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
+    // Используем req.sanitized.query вместо req.query
+    // Там значения уже санитизированы через matchedData():
+    // - pageNumber и pageSize — числа (благодаря .toInt())
+    // - применены .default() значения
+    const queryInput = req.sanitized?.query as RideQueryInput;
 
     const { items, totalCount } = await ridesService.findMany(queryInput);
 
@@ -21,6 +21,6 @@ export async function getRideListHandler(
     });
     res.send(rideListOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }

@@ -31,7 +31,7 @@ export async function createRideHandler(
 
     if (activeRide) {
       res
-        .status(HttpStatus.BadRequest)
+        .status(HttpStatus.Conflict)
         .send(
           createErrorMessages([
             { field: 'status', message: 'The driver is currently on a job' },

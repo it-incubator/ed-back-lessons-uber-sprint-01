@@ -49,7 +49,7 @@ describe('Rides API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet1.body.errors).toHaveLength(6);
 
@@ -69,7 +69,7 @@ describe('Rides API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet2.body.errors).toHaveLength(5);
 
@@ -89,7 +89,7 @@ describe('Rides API body validation check', () => {
           },
         },
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet3.body.errors).toHaveLength(1);
 
@@ -113,6 +113,6 @@ describe('Rides API body validation check', () => {
     await request(app)
       .post(`${RIDES_PATH}/${createdRideId}/actions/finish`)
       .set('Authorization', adminToken)
-      .expect(HttpStatus.UnprocessableEntity);
+      .expect(HttpStatus.Conflict);
   });
 });

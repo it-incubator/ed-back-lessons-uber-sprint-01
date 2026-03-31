@@ -188,12 +188,12 @@ components:
       properties:
         name:
           type: string
-          description: "The full name of the driver
+          description: The full name of the driver
           example: Tom Rider
         phoneNumber:
           type: string
           description: The driver's phone number
-          example: 123-456-7890"
+          example: "123-456-7890"
         email:
           type: string
           description: The driver's email address

@@ -15,6 +15,6 @@ export async function updateDriverHandler(
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }

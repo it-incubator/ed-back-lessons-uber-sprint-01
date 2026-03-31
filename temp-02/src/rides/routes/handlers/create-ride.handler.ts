@@ -17,7 +17,7 @@ export function createRideHandler(
 
   if (!driver) {
     res
-      .status(HttpStatus.BadRequest)
+      .status(HttpStatus.UnprocessableEntity)
       .send(
         createErrorMessages([{ field: 'id', message: 'Driver not found' }]),
       );

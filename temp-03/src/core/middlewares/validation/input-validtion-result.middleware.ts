@@ -36,6 +36,6 @@ export const inputValidationResultMiddleware = (
     next();
     return;
   }
-  res.status(HttpStatus.BadRequest).json({ errorMessages: errors });
+  res.status(HttpStatus.UnprocessableEntity).json({ errorMessages: errors });
   return;
 };

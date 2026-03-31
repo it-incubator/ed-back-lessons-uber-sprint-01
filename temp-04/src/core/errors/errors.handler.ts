@@ -4,39 +4,57 @@ import { HttpStatus } from '../types/http-statuses';
 import { DomainError } from './domain.error';
 import { createErrorMessages } from './create-error-messages';
 
-export function errorsHandler(error: unknown, res: Response): void {
+export function errorsHandler(
+  error: unknown,
+  res: Response,
+  req: { path: string },
+): void {
   if (error instanceof RepositoryNotFoundError) {
-    const httpStatus = HttpStatus.NotFound;
-
-    res.status(httpStatus).send(
-      createErrorMessages([
-        {
-          status: httpStatus,
-          detail: error.message,
-        },
-      ]),
+    res.status(HttpStatus.NotFound).send(
+      createErrorMessages(
+        [
+          {
+            status: String(HttpStatus.NotFound),
+            title: 'Not Found',
+            detail: error.message,
+          },
+        ],
+        req.path,
+      ),
     );
-
     return;
   }
 
   if (error instanceof DomainError) {
-    const httpStatus = HttpStatus.UnprocessableEntity;
-
-    res.status(httpStatus).send(
-      createErrorMessages([
-        {
-          status: httpStatus,
-          source: error.source,
-          detail: error.message,
-          code: error.code,
-        },
-      ]),
+    res.status(HttpStatus.Conflict).send(
+      createErrorMessages(
+        [
+          {
+            status: String(HttpStatus.Conflict),
+            title: 'Conflict',
+            code: error.code,
+            detail: error.message,
+            source: error.source
+              ? { pointer: `/data/attributes/${error.source}` }
+              : undefined,
+          },
+        ],
+        req.path,
+      ),
     );
-
     return;
   }
 
-  res.status(HttpStatus.InternalServerError);
-  return;
+  res.status(HttpStatus.InternalServerError).send(
+    createErrorMessages(
+      [
+        {
+          status: String(HttpStatus.InternalServerError),
+          title: 'Internal Server Error',
+          // detail НЕ добавляем - не хотим раскрывать детали
+        },
+      ],
+      req.path,
+    ),
+  );
 }

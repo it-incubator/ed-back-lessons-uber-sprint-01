@@ -83,8 +83,119 @@
 - Прозрачность структуры данных за счет строгой типизации ресурсов.
 - Автоматическую документацию благодаря предсказуемой структуре ответов.
 
-## 5. Заключение
+## 5. JSON:API Error Objects
 
-Данное техническое задание описывает изменения, направленные на расширение функциональности API управления 
-транспортными средствами и приведение его в соответствие со стандартом JSON API. Реализованные улучшения 
+Проект использует формат ошибок согласно [JSON:API спецификации v1.1](https://jsonapi.org/format/#error-objects).
+
+### Структура документа ошибки
+
+```json
+{
+  "errors": [...],
+  "meta": {
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "path": "/api/rides"
+  }
+}
+```
+
+### Структура объекта ошибки (JsonApiError)
+
+| Поле | Тип | Обязательно | Описание |
+|------|-----|-------------|----------|
+| `status` | string | **да** | HTTP статус код как строка ("400", "404", "422") |
+| `title` | string | **да** | Краткое описание типа ошибки ("Validation Error", "Not Found") |
+| `code` | string | нет | Код ошибки приложения (например "RIDE_ALREADY_FINISHED") |
+| `detail` | string | нет | Подробное описание конкретной ошибки (когда полезно) |
+| `source.pointer` | string | нет | [JSON Pointer (RFC6901)](https://datatracker.ietf.org/doc/html/rfc6901) на поле в request body |
+| `source.parameter` | string | нет | Имя query параметра, вызвавшего ошибку |
+| `meta` | object | нет | Дополнительные метаданные ошибки |
+
+### Когда использовать pointer vs parameter
+
+- **`source.pointer`** - для ошибок в теле запроса (JSON body). Формат: `/data/attributes/fieldName`
+- **`source.parameter`** - для ошибок в query параметрах. Формат: `paramName`
+
+### Примеры
+
+**Ошибка валидации (400):**
+```json
+{
+  "errors": [
+    {
+      "status": "400",
+      "title": "Validation Error",
+      "detail": "clientName should be at least 3 characters",
+      "source": {
+        "pointer": "/data/attributes/clientName"
+      }
+    }
+  ],
+  "meta": {
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "path": "/api/rides"
+  }
+}
+```
+
+**Доменная ошибка (422):**
+```json
+{
+  "errors": [
+    {
+      "status": "422",
+      "code": "RIDE_ALREADY_FINISHED",
+      "title": "Unprocessable Entity",
+      "detail": "Ride has already been finished"
+    }
+  ],
+  "meta": {
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "path": "/api/rides/123/actions/finish"
+  }
+}
+```
+
+**Not Found (404):**
+```json
+{
+  "errors": [
+    {
+      "status": "404",
+      "title": "Not Found",
+      "detail": "Driver with id 507f1f77bcf86cd799439011 not found"
+    }
+  ],
+  "meta": {
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "path": "/api/drivers/507f1f77bcf86cd799439011"
+  }
+}
+```
+
+**Internal Server Error (500) - без detail:**
+```json
+{
+  "errors": [
+    {
+      "status": "500",
+      "title": "Internal Server Error"
+    }
+  ],
+  "meta": {
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "path": "/api/rides"
+  }
+}
+```
+
+### Ссылки
+
+- [JSON:API Error Objects Specification](https://jsonapi.org/format/#error-objects)
+- [RFC 6901 - JSON Pointer](https://datatracker.ietf.org/doc/html/rfc6901)
+
+## 6. Заключение
+
+Данное техническое задание описывает изменения, направленные на расширение функциональности API управления
+транспортными средствами и приведение его в соответствие со стандартом JSON API. Реализованные улучшения
 создают прочную основу для дальнейшего развития и масштабирования приложения.

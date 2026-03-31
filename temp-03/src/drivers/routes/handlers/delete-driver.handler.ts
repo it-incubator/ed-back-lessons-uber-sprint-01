@@ -25,7 +25,7 @@ export async function deleteDriverHandler(req: Request, res: Response) {
 
     if (activeRide) {
       res
-        .status(HttpStatus.BadRequest)
+        .status(HttpStatus.Conflict)
         .send(
           createErrorMessages([
             { field: 'status', message: 'The driver is currently on a job' },

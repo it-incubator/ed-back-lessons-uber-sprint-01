@@ -51,7 +51,7 @@ describe('Driver API body validation check', () => {
         vehicleDescription: null,
         vehicleFeatures: [],
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet1.body.errorMessages).toHaveLength(4);
 
@@ -69,7 +69,7 @@ describe('Driver API body validation check', () => {
         vehicleDescription: null,
         vehicleFeatures: [],
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet2.body.errorMessages).toHaveLength(4);
 
@@ -87,7 +87,7 @@ describe('Driver API body validation check', () => {
         vehicleDescription: null,
         vehicleFeatures: [],
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet3.body.errorMessages).toHaveLength(4);
 
@@ -115,7 +115,7 @@ describe('Driver API body validation check', () => {
         vehicleDescription: null,
         vehicleFeatures: [],
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet1.body.errorMessages).toHaveLength(4);
 
@@ -133,7 +133,7 @@ describe('Driver API body validation check', () => {
         vehicleModel: '', // empty string
         vehicleLicensePlate: '', // empty string
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet2.body.errorMessages).toHaveLength(3);
 
@@ -151,7 +151,7 @@ describe('Driver API body validation check', () => {
         vehicleDescription: null,
         vehicleFeatures: [],
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet3.body.errorMessages).toHaveLength(1);
 
@@ -183,7 +183,7 @@ describe('Driver API body validation check', () => {
           VehicleFeature.WiFi,
         ],
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     const driverResponse = await getDriverById(app, createdDriver.id);
 

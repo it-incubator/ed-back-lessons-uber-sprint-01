@@ -43,7 +43,7 @@ describe('Rides API body validation check', () => {
         toAddress: true, // not a string
         driverId: 'bam', //not a number
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet1.body.errorMessages).toHaveLength(6);
 
@@ -58,7 +58,7 @@ describe('Rides API body validation check', () => {
         driverId: 0, //can not be 0
         toAddress: 'test address',
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet2.body.errorMessages).toHaveLength(5);
 
@@ -73,7 +73,7 @@ describe('Rides API body validation check', () => {
         fromAddress: 'test address',
         toAddress: 'test address',
       })
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.UnprocessableEntity);
 
     expect(invalidDataSet3.body.errorMessages).toHaveLength(1);
 
@@ -96,6 +96,6 @@ describe('Rides API body validation check', () => {
     await request(app)
       .post(`${RIDES_PATH}/${createdRide.id}/actions/finish`)
       .set('Authorization', adminToken)
-      .expect(HttpStatus.BadRequest);
+      .expect(HttpStatus.Conflict);
   });
 });

@@ -1,10 +1,24 @@
-import { HttpStatus } from '../../types/http-statuses';
-
-type ValidationErrorOutput = {
-  status: HttpStatus;
-  detail: string;
-  source: { pointer: string };
-  code: string | null;
+type JsonApiErrorSource = {
+  pointer?: string;
+  parameter?: string;
 };
 
-export type ValidationErrorListOutput = { errors: ValidationErrorOutput[] };
+type JsonApiError = {
+  status: string; // ОБЯЗАТЕЛЬНО
+  title: string; // ОБЯЗАТЕЛЬНО
+  code?: string;
+  detail?: string; // опционально
+  source?: JsonApiErrorSource;
+  meta?: Record<string, unknown>;
+};
+
+type JsonApiErrorDocumentMeta = {
+  timestamp: string;
+  path: string;
+  traceId?: string;
+};
+
+export type JsonApiErrorDocument = {
+  errors: JsonApiError[];
+  meta?: JsonApiErrorDocumentMeta;
+};

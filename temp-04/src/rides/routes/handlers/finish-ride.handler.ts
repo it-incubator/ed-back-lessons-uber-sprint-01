@@ -14,6 +14,6 @@ export async function finishRideHandler(
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (e: unknown) {
-    errorsHandler(e, res);
+    errorsHandler(e, res, req);
   }
 }
