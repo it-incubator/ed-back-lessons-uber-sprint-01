@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatus } from '../../core/types/http-statuses';
-
-export const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'qwerty';
+import { SETTINGS } from '../../core/settings/settings';
 
 export const superAdminGuardMiddleware = (
   req: Request,
@@ -27,7 +25,10 @@ export const superAdminGuardMiddleware = (
 
   const [username, password] = credentials.split(':');
 
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+  if (
+    username !== SETTINGS.ADMIN_USERNAME ||
+    password !== SETTINGS.ADMIN_PASSWORD
+  ) {
     res.sendStatus(HttpStatus.Unauthorized);
     return;
   }

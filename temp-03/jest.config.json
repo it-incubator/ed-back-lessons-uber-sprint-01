@@ -1,15 +1,10 @@
 {
   "preset": "ts-jest",
   "testEnvironment": "node",
+  "setupFiles": ["dotenv/config"],
   "moduleFileExtensions": ["ts", "js", "json", "node"],
-  "transform": {
-    "^.+\\.tsx?$": ["ts-jest", {
-      "tsconfig": "tsconfig.json"
-    }]
-  },
   "testMatch": [
     "<rootDir>/__tests__/**/*.test.ts",
     "<rootDir>/__tests__/**/*.spec.ts"
-  ],
-  "verbose": true
+  ]
 }
