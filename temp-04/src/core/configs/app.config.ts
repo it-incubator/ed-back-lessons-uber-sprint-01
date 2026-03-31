@@ -17,7 +17,7 @@ function getNumberEnvOrThrow(key: string): number {
   return num;
 }
 
-export const SETTINGS = {
+export const appConfig = {
   PORT: getNumberEnvOrThrow('PORT'),
   MONGO_URL: getEnvOrThrow('MONGO_URL'),
   DB_NAME: getEnvOrThrow('DB_NAME'),

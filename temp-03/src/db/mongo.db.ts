@@ -1,7 +1,7 @@
 import { Collection, Db, MongoClient } from 'mongodb';
 import { Driver } from '../drivers/types/driver';
 import { Ride } from '../rides/types/ride';
-import { SETTINGS } from '../core/settings/settings';
+import { appConfig } from '../core/configs/app.config';
 
 const DRIVER_COLLECTION_NAME = 'drivers';
 const RIDE_COLLECTION_NAME = 'rides';
@@ -13,7 +13,7 @@ export let rideCollection: Collection<Ride>;
 // Подключения к бд
 export async function runDB(url: string): Promise<void> {
   client = new MongoClient(url);
-  const db: Db = client.db(SETTINGS.DB_NAME);
+  const db: Db = client.db(appConfig.DB_NAME);
 
   //Инициализация коллекций
   driverCollection = db.collection<Driver>(DRIVER_COLLECTION_NAME);

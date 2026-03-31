@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatus } from '../../core/types/http-statuses';
-import { SETTINGS } from '../../core/settings/settings';
+import { appConfig } from '../../core/configs/app.config';
 
 export const superAdminGuardMiddleware = (
   req: Request,
@@ -26,8 +26,8 @@ export const superAdminGuardMiddleware = (
   const [username, password] = credentials.split(':');
 
   if (
-    username !== SETTINGS.ADMIN_USERNAME ||
-    password !== SETTINGS.ADMIN_PASSWORD
+    username !== appConfig.ADMIN_USERNAME ||
+    password !== appConfig.ADMIN_PASSWORD
   ) {
     res.sendStatus(HttpStatus.Unauthorized);
     return;
