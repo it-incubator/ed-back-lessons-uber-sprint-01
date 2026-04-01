@@ -8,7 +8,7 @@ export async function getDriverHandler(req: Request, res: Response) {
   try {
     const id = req.params.id;
 
-    const driver = await driversRepository.findById(id);
+    const driver = await driversRepository.getByIdOrDefault(id);
 
     if (!driver) {
       res

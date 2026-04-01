@@ -11,14 +11,14 @@ export enum DriverErrorCode {
 }
 
 export const driversService = {
-  async findMany(
+  async getMany(
     queryDto: DriverQueryInput,
   ): Promise<{ items: WithId<Driver>[]; totalCount: number }> {
-    return driversRepository.findMany(queryDto);
+    return driversRepository.getMany(queryDto);
   },
 
-  async findByIdOrFail(id: string): Promise<WithId<Driver>> {
-    return driversRepository.findByIdOrFail(id);
+  async getById(id: string): Promise<WithId<Driver>> {
+    return driversRepository.getById(id);
   },
 
   async create(dto: DriverAttributes): Promise<string> {
@@ -46,7 +46,7 @@ export const driversService = {
   },
 
   async delete(id: string): Promise<void> {
-    const activeRide = await ridesRepository.findActiveRideByDriverId(id);
+    const activeRide = await ridesRepository.getActiveRideByDriverIdOrDefault(id);
 
     if (activeRide) {
       throw new DomainError(

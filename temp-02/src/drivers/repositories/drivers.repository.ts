@@ -3,11 +3,11 @@ import { db } from '../../db/in-memory.db';
 import { DriverInputDto } from '../dto/driver.input-dto';
 
 export const driversRepository = {
-  findAll(): Driver[] {
+  getAll(): Driver[] {
     return db.drivers;
   },
 
-  findById(id: number): Driver | null {
+  getByIdOrDefault(id: number): Driver | null {
     return db.drivers.find((d) => d.id === id) ?? null;
   },
 

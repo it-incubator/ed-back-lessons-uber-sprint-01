@@ -11,7 +11,7 @@ export async function getDriverHandler(
   try {
     const id = req.params.id;
 
-    const driver = await driversService.findByIdOrFail(id);
+    const driver = await driversService.getById(id);
 
     const driverOutput = mapToDriverOutput(driver);
 

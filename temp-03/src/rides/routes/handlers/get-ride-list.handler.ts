@@ -5,7 +5,7 @@ import { HttpStatus } from '../../../core/types/http-statuses';
 
 export async function getRideListHandler(req: Request, res: Response) {
   try {
-    const rides = await ridesRepository.findAll();
+    const rides = await ridesRepository.getAll();
 
     const rideViewModels = rides.map(mapToRideViewModelUtil);
     res.send(rideViewModels);

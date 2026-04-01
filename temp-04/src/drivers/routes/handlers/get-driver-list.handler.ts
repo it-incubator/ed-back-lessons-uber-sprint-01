@@ -12,7 +12,7 @@ export async function getDriverListHandler(req: Request, res: Response) {
     // - применены .default() значения
     const queryInput = req.sanitized?.query as DriverQueryInput;
 
-    const { items, totalCount } = await driversService.findMany(queryInput);
+    const { items, totalCount } = await driversService.getMany(queryInput);
 
     const driversListOutput = mapToDriverListPaginatedOutput(items, {
       pageNumber: queryInput.pageNumber,

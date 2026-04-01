@@ -6,7 +6,7 @@ import { createErrorMessages } from '../../../core/middlewares/validation/input-
 export function deleteDriverHandler(req: Request, res: Response) {
   const id = parseInt(req.params.id);
 
-  const driver = driversRepository.findById(id);
+  const driver = driversRepository.getByIdOrDefault(id);
 
   if (!driver) {
     res

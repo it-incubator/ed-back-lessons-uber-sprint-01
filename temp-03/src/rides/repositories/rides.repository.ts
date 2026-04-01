@@ -3,15 +3,15 @@ import { rideCollection } from '../../db/mongo.db';
 import { ObjectId, WithId } from 'mongodb';
 
 export const ridesRepository = {
-  async findAll(): Promise<WithId<Ride>[]> {
+  async getAll(): Promise<WithId<Ride>[]> {
     return rideCollection.find().toArray();
   },
 
-  async findById(id: string): Promise<WithId<Ride> | null> {
+  async getByIdOrDefault(id: string): Promise<WithId<Ride> | null> {
     return rideCollection.findOne({ _id: new ObjectId(id) });
   },
 
-  async findActiveRideByDriverId(
+  async getActiveRideByDriverIdOrDefault(
     driverId: string,
   ): Promise<WithId<Ride> | null> {
     return rideCollection.findOne({ driverId, finishedAt: null });

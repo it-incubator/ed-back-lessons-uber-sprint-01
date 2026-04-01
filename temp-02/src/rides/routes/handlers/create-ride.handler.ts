@@ -13,7 +13,7 @@ export function createRideHandler(
 ) {
   const driverId = req.body.driverId;
 
-  const driver = driversRepository.findById(driverId);
+  const driver = driversRepository.getByIdOrDefault(driverId);
 
   if (!driver) {
     res

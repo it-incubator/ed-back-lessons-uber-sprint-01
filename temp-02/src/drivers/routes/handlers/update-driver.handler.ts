@@ -10,7 +10,7 @@ export function updateDriverHandler(
 ) {
   const id = parseInt(req.params.id);
 
-  const driver = driversRepository.findById(id);
+  const driver = driversRepository.getByIdOrDefault(id);
 
   if (!driver) {
     res

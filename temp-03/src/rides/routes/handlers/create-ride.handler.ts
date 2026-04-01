@@ -14,7 +14,7 @@ export async function createRideHandler(
   try {
     const driverId = req.body.driverId;
 
-    const driver = await driversRepository.findById(driverId);
+    const driver = await driversRepository.getByIdOrDefault(driverId);
 
     if (!driver) {
       res
@@ -27,7 +27,7 @@ export async function createRideHandler(
     }
 
     // Если у водителя сейчас есть заказ, то создать новую поездку нельзя
-    const activeRide = await ridesRepository.findActiveRideByDriverId(driverId);
+    const activeRide = await ridesRepository.getActiveRideByDriverIdOrDefault(driverId);
 
     if (activeRide) {
       res

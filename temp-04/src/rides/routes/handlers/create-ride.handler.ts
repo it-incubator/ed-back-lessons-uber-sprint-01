@@ -12,7 +12,7 @@ export async function createRideHandler(
   try {
     const createdRideId = await ridesService.create(req.body.data.attributes);
 
-    const createdRide = await ridesService.findByIdOrFail(createdRideId);
+    const createdRide = await ridesService.getById(createdRideId);
 
     const rideOutput = mapToRideOutputUtil(createdRide);
 

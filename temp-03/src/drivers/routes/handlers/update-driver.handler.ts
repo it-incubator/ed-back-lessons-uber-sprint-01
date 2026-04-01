@@ -11,7 +11,7 @@ export async function updateDriverHandler(
   try {
     const id = req.params.id;
 
-    const driver = driversRepository.findById(id);
+    const driver = driversRepository.getByIdOrDefault(id);
 
     if (!driver) {
       res

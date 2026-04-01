@@ -13,7 +13,7 @@ export async function getDriverRideListHandler(req: Request, res: Response) {
     // - применены .default() значения
     const queryInput = req.sanitized?.query as RideQueryInput;
 
-    const { items, totalCount } = await ridesService.findRidesByDriver(
+    const { items, totalCount } = await ridesService.getRidesByDriver(
       queryInput,
       driverId,
     );

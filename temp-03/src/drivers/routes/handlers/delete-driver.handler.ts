@@ -8,7 +8,7 @@ export async function deleteDriverHandler(req: Request, res: Response) {
   try {
     const id = req.params.id;
 
-    const driver = await driversRepository.findById(id);
+    const driver = await driversRepository.getByIdOrDefault(id);
 
     if (!driver) {
       res
@@ -21,7 +21,7 @@ export async function deleteDriverHandler(req: Request, res: Response) {
     }
 
     // Если у водителя сейчас есть заказ, то удалить его нельзя
-    const activeRide = await ridesRepository.findActiveRideByDriverId(id);
+    const activeRide = await ridesRepository.getActiveRideByDriverIdOrDefault(id);
 
     if (activeRide) {
       res

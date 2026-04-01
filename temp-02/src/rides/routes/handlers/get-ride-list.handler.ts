@@ -2,6 +2,6 @@ import { Request, Response } from 'express';
 import { ridesRepository } from '../../repositories/rides.repository';
 
 export function getRideListHandler(req: Request, res: Response) {
-  const rides = ridesRepository.findAll();
+  const rides = ridesRepository.getAll();
   res.send(rides);
 }

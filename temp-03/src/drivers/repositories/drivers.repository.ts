@@ -4,11 +4,11 @@ import { driverCollection } from '../../db/mongo.db';
 import { ObjectId, WithId } from 'mongodb';
 
 export const driversRepository = {
-  async findAll(): Promise<WithId<Driver>[]> {
+  async getAll(): Promise<WithId<Driver>[]> {
     return driverCollection.find().toArray();
   },
 
-  async findById(id: string): Promise<WithId<Driver> | null> {
+  async getByIdOrDefault(id: string): Promise<WithId<Driver> | null> {
     return driverCollection.findOne({ _id: new ObjectId(id) });
   },
 

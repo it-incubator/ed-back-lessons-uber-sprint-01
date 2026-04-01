@@ -5,7 +5,7 @@ import { RepositoryNotFoundError } from '../../core/errors/repository-not-found.
 import { RideQueryInput } from '../routes/input/ride-query.input';
 
 export const ridesRepository = {
-  async findMany(
+  async getMany(
     queryDto: RideQueryInput,
   ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
     const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
@@ -24,7 +24,7 @@ export const ridesRepository = {
     return { items, totalCount };
   },
 
-  async findRidesByDriver(
+  async getRidesByDriver(
     queryDto: RideQueryInput,
     driverId: string,
   ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
@@ -44,10 +44,10 @@ export const ridesRepository = {
     return { items, totalCount };
   },
 
-  async findById(id: string): Promise<WithId<Ride> | null> {
+  async getByIdOrDefault(id: string): Promise<WithId<Ride> | null> {
     return rideCollection.findOne({ _id: new ObjectId(id) });
   },
-  async findByIdOrFail(id: string): Promise<WithId<Ride>> {
+  async getById(id: string): Promise<WithId<Ride>> {
     const res = await rideCollection.findOne({ _id: new ObjectId(id) });
 
     if (!res) {
@@ -55,7 +55,7 @@ export const ridesRepository = {
     }
     return res;
   },
-  async findActiveRideByDriverId(
+  async getActiveRideByDriverIdOrDefault(
     driverId: string,
   ): Promise<WithId<Ride> | null> {
     return rideCollection.findOne({ driverId, finishedAt: null });

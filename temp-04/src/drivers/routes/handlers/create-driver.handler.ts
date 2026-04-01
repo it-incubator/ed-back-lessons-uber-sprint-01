@@ -14,7 +14,7 @@ export async function createDriverHandler(
       req.body.data.attributes,
     );
 
-    const createdDriver = await driversService.findByIdOrFail(createdDriverId);
+    const createdDriver = await driversService.getById(createdDriverId);
 
     const driverOutput = mapToDriverOutput(createdDriver);
 

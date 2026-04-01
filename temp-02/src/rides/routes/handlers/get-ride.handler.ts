@@ -6,7 +6,7 @@ import { createErrorMessages } from '../../../core/middlewares/validation/input-
 export function getRideHandler(req: Request, res: Response) {
   const id = parseInt(req.params.id);
 
-  const ride = ridesRepository.findById(id);
+  const ride = ridesRepository.getByIdOrDefault(id);
 
   if (!ride) {
     res

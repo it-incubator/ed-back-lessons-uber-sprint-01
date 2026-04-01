@@ -12,7 +12,7 @@ export async function getRideListHandler(req: Request, res: Response) {
     // - применены .default() значения
     const queryInput = req.sanitized?.query as RideQueryInput;
 
-    const { items, totalCount } = await ridesService.findMany(queryInput);
+    const { items, totalCount } = await ridesService.getMany(queryInput);
 
     const rideListOutput = mapToRideListPaginatedOutput(items, {
       pageNumber: queryInput.pageNumber,

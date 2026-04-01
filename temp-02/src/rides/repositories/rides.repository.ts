@@ -2,11 +2,11 @@ import { Ride } from '../types/ride';
 import { db } from '../../db/in-memory.db';
 
 export const ridesRepository = {
-  findAll(): Ride[] {
+  getAll(): Ride[] {
     return db.rides;
   },
 
-  findById(id: number): Ride | null {
+  getByIdOrDefault(id: number): Ride | null {
     return db.rides.find((d) => d.id === id) ?? null;
   },
 

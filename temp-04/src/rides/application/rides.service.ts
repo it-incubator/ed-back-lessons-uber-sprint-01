@@ -12,30 +12,30 @@ export enum RideErrorCode {
 }
 
 export const ridesService = {
-  async findMany(
+  async getMany(
     queryDto: RideQueryInput,
   ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
-    return ridesRepository.findMany(queryDto);
+    return ridesRepository.getMany(queryDto);
   },
 
-  async findRidesByDriver(
+  async getRidesByDriver(
     queryDto: RideQueryInput,
     driverId: string,
   ): Promise<{ items: WithId<Ride>[]; totalCount: number }> {
-    await driversRepository.findByIdOrFail(driverId);
+    await driversRepository.getById(driverId);
 
-    return ridesRepository.findRidesByDriver(queryDto, driverId);
+    return ridesRepository.getRidesByDriver(queryDto, driverId);
   },
 
-  async findByIdOrFail(id: string): Promise<WithId<Ride>> {
-    return ridesRepository.findByIdOrFail(id);
+  async getById(id: string): Promise<WithId<Ride>> {
+    return ridesRepository.getById(id);
   },
 
   async create(dto: RideAttributes): Promise<string> {
-    const driver = await driversRepository.findByIdOrFail(dto.driverId);
+    const driver = await driversRepository.getById(dto.driverId);
 
     // Если у водителя сейчас есть заказ, то создать новую поездку нельзя
-    const activeRide = await ridesRepository.findActiveRideByDriverId(
+    const activeRide = await ridesRepository.getActiveRideByDriverIdOrDefault(
       dto.driverId,
     );
 
@@ -72,7 +72,7 @@ export const ridesService = {
   },
 
   async finishRide(id: string) {
-    const ride = await ridesRepository.findByIdOrFail(id);
+    const ride = await ridesRepository.getById(id);
 
     if (ride.finishedAt) {
       throw new DomainError(

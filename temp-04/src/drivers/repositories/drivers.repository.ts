@@ -6,7 +6,7 @@ import { DriverAttributes } from '../application/dtos/driver-attributes';
 import { DriverQueryInput } from '../routes/input/driver-query.input';
 
 export const driversRepository = {
-  async findMany(
+  async getMany(
     queryDto: DriverQueryInput,
   ): Promise<{ items: WithId<Driver>[]; totalCount: number }> {
     const {
@@ -43,11 +43,11 @@ export const driversRepository = {
     return { items, totalCount };
   },
 
-  async findById(id: string): Promise<WithId<Driver> | null> {
+  async getByIdOrDefault(id: string): Promise<WithId<Driver> | null> {
     return driverCollection.findOne({ _id: new ObjectId(id) });
   },
 
-  async findByIdOrFail(id: string): Promise<WithId<Driver>> {
+  async getById(id: string): Promise<WithId<Driver>> {
     const res = await driverCollection.findOne({ _id: new ObjectId(id) });
 
     if (!res) {

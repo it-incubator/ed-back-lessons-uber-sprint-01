@@ -10,7 +10,7 @@ export async function getRideHandler(
   try {
     const id = req.params.id;
 
-    const ride = await ridesService.findByIdOrFail(id);
+    const ride = await ridesService.getById(id);
 
     const rideOutput = mapToRideOutputUtil(ride);
 

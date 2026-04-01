@@ -5,7 +5,7 @@ import { HttpStatus } from '../../../core/types/http-statuses';
 
 export async function getDriverListHandler(req: Request, res: Response) {
   try {
-    const drivers = await driversRepository.findAll();
+    const drivers = await driversRepository.getAll();
 
     const driverViewModels = drivers.map(mapToDriverViewModel);
 

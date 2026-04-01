@@ -8,7 +8,7 @@ export async function getRideHandler(req: Request, res: Response) {
   try {
     const id = req.params.id;
 
-    const ride = await ridesRepository.findById(id);
+    const ride = await ridesRepository.getByIdOrDefault(id);
 
     if (!ride) {
       res
