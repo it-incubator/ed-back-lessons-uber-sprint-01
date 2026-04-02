@@ -68,7 +68,7 @@ export const ridesRepository = {
   },
 
   async finishRide(id: string, finishedAt: Date) {
-    const updateResult = await rideCollection.updateOne(
+    await rideCollection.updateOne(
       {
         _id: new ObjectId(id),
       },
@@ -79,10 +79,6 @@ export const ridesRepository = {
         },
       },
     );
-
-    if (updateResult.matchedCount < 1) {
-      throw new Error('Ride not exist');
-    }
 
     return;
   },

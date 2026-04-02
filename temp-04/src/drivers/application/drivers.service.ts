@@ -41,11 +41,13 @@ export const driversService = {
   },
 
   async update(id: string, dto: DriverAttributes): Promise<void> {
+    await driversRepository.getById(id); // throws 404 if not found
     await driversRepository.update(id, dto);
     return;
   },
 
   async delete(id: string): Promise<void> {
+    await driversRepository.getById(id); // throws 404 if not found
     const activeRide = await ridesRepository.getActiveRideByDriverIdOrDefault(id);
 
     if (activeRide) {

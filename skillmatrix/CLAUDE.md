@@ -442,10 +442,6 @@ export const entitiesRepository = {
       },
     );
 
-    if (updateResult.matchedCount < 1) {
-      throw new RepositoryNotFoundError('Entity not exist');
-    }
-
     return;
   },
 
@@ -453,10 +449,6 @@ export const entitiesRepository = {
     const deleteResult = await entityCollection.deleteOne({
       _id: new ObjectId(id),
     });
-
-    if (deleteResult.deletedCount < 1) {
-      throw new RepositoryNotFoundError('Entity not exist');
-    }
 
     return;
   },
@@ -495,11 +487,13 @@ export const entitiesService = {
   },
 
   async update(id: string, dto: EntityAttributes): Promise<void> {
+    await entitiesRepository.findByIdOrFail(id); // throws 404 if not found
     await entitiesRepository.update(id, dto);
     return;
   },
 
   async delete(id: string): Promise<void> {
+    await entitiesRepository.findByIdOrFail(id); // throws 404 if not found
     await entitiesRepository.delete(id);
     return;
   },

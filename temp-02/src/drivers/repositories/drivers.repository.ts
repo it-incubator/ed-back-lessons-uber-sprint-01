@@ -21,7 +21,7 @@ export const driversRepository = {
     const driver = db.drivers.find((d) => d.id === id);
 
     if (!driver) {
-      throw new Error('Driver not exist');
+      return;
     }
 
     driver.name = dto.name;
@@ -41,7 +41,7 @@ export const driversRepository = {
     const index = db.drivers.findIndex((v) => v.id === id);
 
     if (index === -1) {
-      throw new Error('Driver not exist');
+      return;
     }
 
     db.drivers.splice(index, 1);

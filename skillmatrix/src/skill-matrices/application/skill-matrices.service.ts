@@ -27,11 +27,13 @@ export const skillMatricesService = {
   },
 
   async update(id: string, dto: SkillMatrixAttributes): Promise<void> {
+    await skillMatricesRepository.findByIdOrFail(id); // throws 404 if not found
     await skillMatricesRepository.update(id, dto);
     return;
   },
 
   async delete(id: string): Promise<void> {
+    await skillMatricesRepository.findByIdOrFail(id); // throws 404 if not found
     await skillMatricesRepository.delete(id);
     return;
   },

@@ -55,7 +55,7 @@ export const skillMatricesRepository = {
   },
 
   async update(id: string, dto: SkillMatrixAttributes): Promise<void> {
-    const updateResult = await skillMatrixCollection.updateOne(
+    await skillMatrixCollection.updateOne(
       {
         _id: new ObjectId(id),
       },
@@ -68,21 +68,13 @@ export const skillMatricesRepository = {
       },
     );
 
-    if (updateResult.matchedCount < 1) {
-      throw new RepositoryNotFoundError('SkillMatrix not exist');
-    }
-
     return;
   },
 
   async delete(id: string): Promise<void> {
-    const deleteResult = await skillMatrixCollection.deleteOne({
+    await skillMatrixCollection.deleteOne({
       _id: new ObjectId(id),
     });
-
-    if (deleteResult.deletedCount < 1) {
-      throw new RepositoryNotFoundError('SkillMatrix not exist');
-    }
 
     return;
   },

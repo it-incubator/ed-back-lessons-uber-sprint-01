@@ -63,7 +63,7 @@ export const driversRepository = {
   },
 
   async update(id: string, dto: DriverAttributes): Promise<void> {
-    const updateResult = await driverCollection.updateOne(
+    await driverCollection.updateOne(
       {
         _id: new ObjectId(id),
       },
@@ -84,21 +84,13 @@ export const driversRepository = {
       },
     );
 
-    if (updateResult.matchedCount < 1) {
-      throw new RepositoryNotFoundError('Driver not exist');
-    }
-
     return;
   },
 
   async delete(id: string): Promise<void> {
-    const deleteResult = await driverCollection.deleteOne({
+    await driverCollection.deleteOne({
       _id: new ObjectId(id),
     });
-
-    if (deleteResult.deletedCount < 1) {
-      throw new RepositoryNotFoundError('Driver not exist');
-    }
 
     return;
   },
