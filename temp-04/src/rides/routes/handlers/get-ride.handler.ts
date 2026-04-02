@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { mapToRideOutputUtil } from '../mappers/map-to-ride-output.util';
 import { ridesService } from '../../application/rides.service';
-import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function getRideHandler(
   req: Request<{ id: string }>,
   res: Response,
+  next: NextFunction,
 ) {
   try {
     const id = req.params.id;
@@ -16,6 +16,6 @@ export async function getRideHandler(
 
     res.send(rideOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res, req);
+    next(e);
   }
 }

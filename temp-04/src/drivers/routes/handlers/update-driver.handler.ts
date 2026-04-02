@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { driversService } from '../../application/drivers.service';
 import { DriverUpdateInput } from '../input/driver-update.input';
-import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function updateDriverHandler(
   req: Request<{ id: string }, {}, DriverUpdateInput>,
   res: Response,
+  next: NextFunction,
 ) {
   try {
     const id = req.params.id;
@@ -15,6 +15,6 @@ export async function updateDriverHandler(
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (e: unknown) {
-    errorsHandler(e, res, req);
+    next(e);
   }
 }

@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { mapToDriverOutput } from '../mappers/map-to-driver-output.util';
 import { driversService } from '../../application/drivers.service';
-import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function getDriverHandler(
   req: Request<{ id: string }>,
   res: Response,
+  next: NextFunction,
 ) {
   try {
     const id = req.params.id;
@@ -17,6 +17,6 @@ export async function getDriverHandler(
 
     res.status(HttpStatus.Ok).send(driverOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res, req);
+    next(e);
   }
 }

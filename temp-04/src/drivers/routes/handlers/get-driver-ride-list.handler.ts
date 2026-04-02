@@ -1,10 +1,13 @@
-import { Request, Response } from 'express';
-import { errorsHandler } from '../../../core/errors/errors.handler';
+import { Request, Response, NextFunction } from 'express';
 import { RideQueryInput } from '../../../rides/routes/input/ride-query.input';
 import { ridesService } from '../../../rides/application/rides.service';
 import { mapToRideListPaginatedOutput } from '../../../rides/routes/mappers/map-to-ride-list-paginated-output.util';
 
-export async function getDriverRideListHandler(req: Request, res: Response) {
+export async function getDriverRideListHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   try {
     const driverId = req.params.id;
     // Используем req.sanitized.query вместо req.query
@@ -25,6 +28,6 @@ export async function getDriverRideListHandler(req: Request, res: Response) {
     });
     res.send(rideListOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res, req);
+    next(e);
   }
 }

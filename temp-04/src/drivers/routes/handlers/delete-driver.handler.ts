@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { errorsHandler } from '../../../core/errors/errors.handler';
 import { driversService } from '../../application/drivers.service';
 
 export async function deleteDriverHandler(
   req: Request<{ id: string }>,
   res: Response,
+  next: NextFunction,
 ) {
   try {
     const id = req.params.id;
@@ -14,6 +14,6 @@ export async function deleteDriverHandler(
 
     res.sendStatus(HttpStatus.NoContent);
   } catch (e: unknown) {
-    errorsHandler(e, res, req);
+    next(e);
   }
 }

@@ -1,13 +1,13 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { mapToDriverOutput } from '../mappers/map-to-driver-output.util';
 import { driversService } from '../../application/drivers.service';
-import { errorsHandler } from '../../../core/errors/errors.handler';
 import { DriverCreateInput } from '../input/driver-create.input';
 
 export async function createDriverHandler(
   req: Request<{}, {}, DriverCreateInput>,
   res: Response,
+  next: NextFunction,
 ) {
   try {
     const createdDriverId = await driversService.create(
@@ -20,6 +20,6 @@ export async function createDriverHandler(
 
     res.status(HttpStatus.Created).send(driverOutput);
   } catch (e: unknown) {
-    errorsHandler(e, res, req);
+    next(e);
   }
 }
