@@ -4,6 +4,7 @@ import { driversRouter } from './drivers/routes/drivers.route';
 import { testingRouter } from './testing/routes/testing.route';
 import { ridesRoute } from './rides/routes/rides.route';
 import { DRIVERS_PATH, RIDES_PATH, TESTING_PATH } from './core/paths/paths';
+import { errorsHandler } from './core/errors/errors.handler';
 
 /**
  * Настраиваем routes, cors, swagger
@@ -17,6 +18,8 @@ export const setupApp = (app: Express) => {
   app.use(TESTING_PATH, testingRouter);
 
   setupSwagger(app);
+
+  app.use(errorsHandler); // error middleware — после роутеров
 
   return app;
 };
